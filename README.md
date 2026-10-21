@@ -1,10 +1,10 @@
 # Optivortium Alliance: AI Eyewear Platform
 
+![Optivortium Alliance: live virtual try-on and face shape analysis with 87% accuracy](docs/cover.jpg)
+
 My final-year project for a BS in Software Engineering at The University of Faisalabad (2026). **Optic Suite** is an online eyewear store that detects your face shape, recommends glasses that suit it, and lets you try frames on live through your webcam.
 
 **87% face shape accuracy on 700+ test images · over 95% face tracking accuracy in testing**
-
-![Optic Suite landing page](docs/screenshot.jpg)
 
 ## What it does
 
@@ -55,6 +55,10 @@ website/
   VirtualTry-on/        Live try-on with MediaPipe Face Mesh
   ResetPassword/        Password reset
 ```
+
+## Screenshots
+
+![Optic Suite landing page](docs/screenshot.jpg)
 
 ## Run it locally
 
