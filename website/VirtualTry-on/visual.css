@@ -1,0 +1,250 @@
+* { margin:0; padding:0; box-sizing:border-box; }
+body { 
+  font-family:'Poppins',sans-serif; 
+  background:linear-gradient(135deg,#f8fbff,#e0e7ff);  
+}
+
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  overflow: hidden;
+  background: #000; /* black background so koi white gap na aye */
+}
+
+video, canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.guide-box { 
+  position:absolute; 
+  border:3px dashed rgba(0,122,255,0.5); 
+  border-radius:15px; 
+  width:40%; 
+  height:50%; 
+  top:50%; 
+  left:50%; 
+  transform:translate(-50%,-50%); 
+  z-index:5; 
+  pointer-events:none; 
+  animation:pulse 2s infinite; 
+}
+
+.notice { 
+  position:absolute; 
+  top:30px; 
+  left:50%; 
+  transform:translateX(-50%); 
+  background:rgba(255,255,255,0.85); 
+  padding:12px 20px; 
+  border-radius:12px; 
+  z-index:10; 
+  font-weight:600; 
+  color:#333; 
+  box-shadow:0 4px 12px rgba(0,0,0,0.08); 
+}
+
+#flashEffect { 
+  position:absolute; 
+  top:0; 
+  left:0; 
+  width:100%; 
+  height:100%; 
+  background:white; 
+  opacity:0; 
+  pointer-events:none; 
+  z-index:50; 
+  transition:opacity .25s; 
+}
+
+/* Modal */
+.modal { 
+  display:none; 
+  position:fixed; 
+  inset:0; 
+  background:rgba(0,0,0,0.7); 
+  z-index:100; 
+  align-items:center; 
+  justify-content:center; 
+}
+.modal-content { 
+  background:#fff; 
+  padding:20px; 
+  border-radius:14px; 
+  max-width:90%; 
+  position:relative; 
+  text-align:center; 
+}
+.modal-actions { 
+  display:flex; 
+  gap:12px; 
+  justify-content:center; 
+  margin-top:12px; 
+}
+.modal-actions button { 
+  padding:10px 16px; 
+  border-radius:8px; 
+  border:none; 
+  cursor:pointer; 
+  font-weight:600; 
+}
+#downloadBtn { background:#000000;color:#fff; } 
+#shareBtn { background:#000000;color:#fff; }
+#closeModal { 
+  position:absolute; 
+  top:10px; 
+  right:12px; 
+  font-size:24px; 
+  cursor:pointer; 
+  color:#555; 
+}
+
+/* ✅ Action buttons container */
+.action-buttons {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 30;
+}
+
+/* Common button style */
+.action-buttons button {
+  background: #252525;
+  color: #fff;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  font-size: 15px;
+  transition: all 0.25s ease;
+}
+
+.action-buttons button:hover {
+  background: #000000;
+  transform: translateY(-2px);
+}
+
+/* Capture button special color */
+#captureBtn {
+  background: #000000;
+}
+
+
+/* Adjust/Lock button special color */
+#adjustToggleBtn {
+  background: #000000;
+}
+
+
+/* ✅ Related products horizontal row */
+#related-products {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+#related-products::-webkit-scrollbar { display: none; }
+#related-products { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ✅ Product card style */
+.related-card {
+  min-width: 200px;
+  max-width: 200px;
+   padding: 10px;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 14px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.related-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+.related-card img {
+  width: 100%;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+.related-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+.related-card p {
+  font-size: 13px;
+  font-weight: 700;
+  color: #252525;
+}
+
+/* Color picker */
+.color-picker { 
+  position:absolute; 
+  top:50%; 
+  right:18px; 
+  transform:translateY(-50%); 
+  display:flex; 
+  flex-direction:column; 
+  gap:12px; 
+  z-index:20; 
+}
+.color-btn { 
+  width:34px; 
+  height:34px; 
+  border-radius:50%; 
+  border:2px solid #fff; 
+  box-shadow:0 2px 6px rgba(0,0,0,0.18); 
+  cursor:pointer; 
+}
+.color-btn.clear { 
+  background: repeating-linear-gradient(45deg,#fff,#fff 6px,#ddd 6px,#ddd 12px); 
+  border:2px dashed #999; 
+}
+.color-btn.selected { 
+  outline:3px solid rgba(0,0,0,0.85); 
+  transform:scale(1.06); 
+}
+.related-card a {
+  display: inline-block;
+  margin-top: auto;
+  text-decoration: none;
+}
+.related-card {
+  transition: all 0.35s ease;
+  border: 1px solid #000000; /* soft gray border */
+}
+.related-card:hover {
+  transform: translateY(-10px) scale(1.04);
+
+}
+.related-card img {
+  transition: transform 0.4s ease;
+}
+.related-card img:hover {
+  transform: scale(1.12);
+}
+
+
+@keyframes pulse { 
+  0%{transform:translate(-50%,-50%) scale(1)} 
+  50%{transform:translate(-50%,-50%) scale(1.02)} 
+  100%{transform:translate(-50%,-50%) scale(1)} 
+}

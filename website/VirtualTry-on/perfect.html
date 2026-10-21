@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Virtual Glasses Try-On</title>
+  <link rel="stylesheet" href="visual.css">
+
+  <!-- FaceMesh + Camera utils (global Camera and FaceMesh) -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <div class="container" id="container">
+    <video class="input_video" autoplay muted playsinline></video>
+    <canvas class="output_canvas"></canvas>
+    <div class="guide-box" aria-hidden="true"></div>
+    <div class="notice" id="notice">🕶 Please remove your glasses and align your face in the box</div>
+
+    <!-- dynamic picker placeholder -->
+    <div id="colorPicker" class="color-picker" aria-label="Frame color picker"></div>
+  </div>
+
+  <div class="action-buttons">
+  <button id="adjustToggleBtn">Adjust Glasses</button>
+  <button class="capture-btn" id="captureBtn">📸 Capture</button>
+</div>
+<div id="flashEffect"></div>
+
+  <div id="flashEffect"></div>
+
+  <div id="previewModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal">&times;</span>
+      <h2>📸 Your Try-On</h2>
+      <img id="capturedImage" src="" alt="Captured Photo" style="max-width:100%; border-radius:10px; margin-top:10px;">
+      <div class="modal-actions">
+        <button id="downloadBtn">⬇️ Download</button>
+        <button id="shareBtn">📤 Share</button>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <script type="module">
+ 
+    // ====== Firebase imports (module) ======
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+    // ---------- simple util ----------
+    const $ = sel => document.querySelector(sel);
+
+    // URL params
+    const urlParams = new URLSearchParams(window.location.search || "");
+    const imageUrl = urlParams.get('img') || '';
+    const productId = urlParams.get('id') || '';        // Firestore doc id (optional)
+    const colorsParam = urlParams.get('colors') || ''; // optional fallback color list (comma separated)
+    const initialColorParam = urlParams.get('selectedColor') || urlParams.get('color') || null;
+
+    // Firebase config - your existing config
+    const firebaseConfig = {
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+      projectId: "YOUR_FIREBASE_PROJECT_ID",
+      storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+      appId: "YOUR_FIREBASE_APP_ID"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // DOM refs
+    const video = $('.input_video');
+    const canvas = $('.output_canvas');
+    const ctx = canvas.getContext('2d');
+    const colorPickerEl = $('#colorPicker');
+    const notice = $('#notice');
+
+    // Glasses image (supplied via URL param ?img=... or fallback)
+    const glassesImage = new Image();
+    glassesImage.crossOrigin = "anonymous";
+    glassesImage.src = imageUrl || "/FYP-2024/FYP/OpticSuiteImages/product/Glasses1.png";
+
+    // Tinting state
+    let selectedColorRaw = null;      // e.g. "#aabbcc" or "Brown" or "rgba(...)" or null
+    let tintedFrameImg = null;        // Image used as overlay
+    let frameMaskCanvas = null;       // mask canvas built from glassesImage
+
+    // When glasses image loads, build the mask
+    glassesImage.addEventListener('load', () => {
+      try { buildFrameMask(); } catch(e) { console.error("mask build error:", e); }
+      // If selectedColorRaw already set (via URL or colors load), then rebuild tinted frame
+      if (selectedColorRaw) rebuildTintedFrame();
+    });
+    glassesImage.addEventListener('error', (e) => console.error("Failed to load glasses image", e));
+
+    function resizeCanvas() { canvas.width = video.videoWidth; canvas.height = video.videoHeight; }
+
+    // ---------------- FaceMesh ----------------
+    const faceMesh = new FaceMesh({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+    });
+    faceMesh.setOptions({ maxNumFaces:1, refineLandmarks:true, minDetectionConfidence:0.6, minTrackingConfidence:0.6 });
+
+    // smoothing helpers
+    let prevX = 0, prevY = 0, prevAngle = 0, prevWidth = 0;
+    function smooth(value, prev, factor = 0.3) { return prev + (value - prev) * factor; }
+
+    // manual adjust state (kept intact)
+    let manualMode=false, manualX=0, manualY=0, manualAngle=0, manualWidth=0;
+    let dragOffsetX=0, dragOffsetY=0;
+    $('#adjustToggleBtn').addEventListener('click', () => {
+      manualMode = !manualMode;
+      $('#adjustToggleBtn').textContent = manualMode ? "✅ Lock Glasses" : " Adjust Glasses";
+      if (manualMode) { manualX = prevX; manualY = prevY; manualAngle = prevAngle; manualWidth = prevWidth; }
+    });
+
+    function getMousePos(e) { const rect = canvas.getBoundingClientRect(); return { x: e.clientX - rect.left, y: e.clientY - rect.top }; }
+    let isDragging=false;
+    canvas.addEventListener('mousedown', (e) => { if(!manualMode) return; const {x,y}=getMousePos(e); dragOffsetX = manualX - x; dragOffsetY = manualY - y; isDragging=true; });
+    canvas.addEventListener('mousemove', (e) => { if(!manualMode||!isDragging) return; const {x,y}=getMousePos(e); manualX = x + dragOffsetX; manualY = y + dragOffsetY; });
+    ['mouseup','mouseleave'].forEach(ev => canvas.addEventListener(ev,()=>{isDragging=false;}));
+    canvas.addEventListener('wheel', (e) => {
+      if (!manualMode) return;
+      e.preventDefault();
+      if (e.shiftKey) manualAngle += e.deltaY * -0.003;
+      else { manualWidth += e.deltaY * -0.5; if (manualWidth < 50) manualWidth = 50; }
+    }, { passive:false });
+
+    // draw function
+    function drawGlasses(landmarks) {
+      let posX,posY,angle,glassesWidth;
+      if (manualMode) {
+        posX = canvas.width - manualX; posY = manualY; angle = manualAngle; glassesWidth = manualWidth;
+      } else {
+        const leftEye = landmarks[133], rightEye = landmarks[362], nose = landmarks[1], leftTemple = landmarks[234], rightTemple = landmarks[454];
+        const eyeCenterX = ((leftEye.x + rightEye.x)/2) * canvas.width;
+        const eyeCenterY = ((leftEye.y + rightEye.y)/2) * canvas.height;
+        const faceWidth = Math.hypot((rightTemple.x-leftTemple.x)*canvas.width, (rightTemple.y-leftTemple.y)*canvas.height);
+        const ang = Math.atan2((rightEye.y-leftEye.y)*canvas.height, (rightEye.x-leftEye.x)*canvas.width);
+        const avgZ = (leftEye.z + rightEye.z + nose.z)/3; const scaleZ = 1 + avgZ*0.5;
+        const targetWidth = faceWidth * 1.1 * scaleZ;
+        const x = smooth(eyeCenterX, prevX, 0.2);
+        const y = smooth(eyeCenterY, prevY, 0.2);
+        const a = smooth(ang, prevAngle, 0.2);
+        const w = smooth(targetWidth, prevWidth, 0.2);
+        prevX=x; prevY=y; prevAngle=a; prevWidth=w;
+        posX=x; posY=y; angle=a; glassesWidth=w;
+      }
+
+      const height = glassesWidth * (glassesImage.height / glassesImage.width);
+      ctx.save();
+      // mirrored space
+      ctx.translate(canvas.width, 0); ctx.scale(-1,1); ctx.translate(posX,posY); ctx.rotate(angle);
+      ctx.drawImage(glassesImage, -glassesWidth/2, -height/2, glassesWidth, height);
+      if (tintedFrameImg) ctx.drawImage(tintedFrameImg, -glassesWidth/2, -height/2, glassesWidth, height);
+      ctx.restore();
+    }
+
+    function onResults(results) {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.save(); ctx.translate(canvas.width,0); ctx.scale(-1,1); ctx.drawImage(video,0,0,canvas.width,canvas.height); ctx.restore();
+      if (!results.multiFaceLandmarks || results.multiFaceLandmarks.length===0) return;
+      drawGlasses(results.multiFaceLandmarks[0]);
+    }
+    faceMesh.onResults(onResults);
+
+    // start camera (uses Camera global from camera_utils.js)
+    function startCamera() {
+      navigator.mediaDevices.getUserMedia({ video:true })
+        .then(stream => {
+          video.srcObject = stream;
+          video.onloadedmetadata = () => {
+            resizeCanvas();
+            const camera = new Camera(video, { onFrame: async () => await faceMesh.send({ image: video }), width: 1280, height: 720 });
+            camera.start();
+          }
+        })
+        .catch(() => { if (notice) notice.textContent = '❌ Camera permission denied!'; });
+    }
+    startCamera();
+
+    // window resize: try to keep canvas sized
+    window.addEventListener('resize', () => { try { resizeCanvas(); } catch(e) {} });
+
+    // ---------------- Mask builder ----------------
+    function buildFrameMask() {
+      // creates frameMaskCanvas where frame pixels alpha=255 and background alpha=0
+      const w = glassesImage.naturalWidth, h = glassesImage.naturalHeight;
+      if (!w || !h) return;
+      const src = document.createElement('canvas'); src.width = w; src.height = h;
+      const sctx = src.getContext('2d'); sctx.drawImage(glassesImage,0,0,w,h);
+      const img = sctx.getImageData(0,0,w,h); const d = img.data;
+
+      for (let i=0;i<d.length;i+=4) {
+        const r=d[i], g=d[i+1], b=d[i+2], a=d[i+3];
+        const luminance = 0.2126*r + 0.7152*g + 0.0722*b;
+        const max = Math.max(r,g,b), min = Math.min(r,g,b);
+        const sat = max===0 ? 0 : (max-min)/max;
+        const isFrame = a>60 && (luminance < 200 || sat > 0.18);
+        d[i]=255; d[i+1]=255; d[i+2]=255; d[i+3]= isFrame ? 255 : 0;
+      }
+      sctx.putImageData(img,0,0);
+      frameMaskCanvas = src;
+    }
+
+    // rebuild tinted overlay - make sure frameMaskCanvas exists
+    async function rebuildTintedFrame() {
+      // if no selected color or no mask yet, clear overlay
+      if (!selectedColorRaw || !frameMaskCanvas) { tintedFrameImg = null; return; }
+
+      const w = frameMaskCanvas.width, h = frameMaskCanvas.height;
+      const tintCanvas = document.createElement('canvas'); tintCanvas.width = w; tintCanvas.height = h;
+      const tctx = tintCanvas.getContext('2d');
+
+      // If color string is an explicit rgba(...) we can use it directly
+      let colorToUse = selectedColorRaw;
+      // If it's a color name or hex, set globalAlpha for slight translucency
+      if (!/^rgba/i.test(colorToUse) && !/^hsla/i.test(colorToUse)) {
+        // inject alpha 0.85 by using fillStyle and globalAlpha
+        tctx.globalAlpha = 0.85;
+        tctx.fillStyle = colorToUse;
+        tctx.fillRect(0,0,w,h);
+        tctx.globalAlpha = 1.0;
+      } else {
+        tctx.fillStyle = colorToUse;
+        tctx.fillRect(0,0,w,h);
+      }
+
+      // Use destination-in to keep only frame shape from mask
+      tctx.globalCompositeOperation = 'destination-in';
+      tctx.drawImage(frameMaskCanvas, 0, 0, w, h);
+      tctx.globalCompositeOperation = 'source-over';
+
+      const img = new Image();
+      img.src = tintCanvas.toDataURL();
+      tintedFrameImg = img;
+    }
+
+    // ---------------- Color picker population ----------------
+    // highlight helper
+    function highlightSelectedButton(btn) {
+      document.querySelectorAll('#colorPicker .color-btn').forEach(b => b.classList.remove('selected'));
+      if (btn) btn.classList.add('selected');
+    }
+
+    // Populate picker from an explicit array (strings)
+    function populatePickerFromArray(colorArray) {
+      colorPickerEl.innerHTML = '';
+      if (!Array.isArray(colorArray) || colorArray.length===0) {
+        // only show clear
+        const clearBtn = document.createElement('div'); clearBtn.className='color-btn clear'; clearBtn.dataset.color='none'; clearBtn.title='No tint';
+        clearBtn.addEventListener('click', () => { selectedColorRaw = null; rebuildTintedFrame(); highlightSelectedButton(clearBtn); });
+        colorPickerEl.appendChild(clearBtn);
+        return;
+      }
+
+      colorArray.forEach((c, idx) => {
+        const btn = document.createElement('div'); btn.className='color-btn'; btn.dataset.color = c; btn.title = c;
+        // attempt to set background color (works for hex or name)
+        try { btn.style.background = c; } catch(e) { btn.style.background = '#ccc'; }
+        btn.addEventListener('click', async () => {
+          selectedColorRaw = (c === 'none') ? null : c;
+          await rebuildTintedFrame();
+          highlightSelectedButton(btn);
+        });
+        colorPickerEl.appendChild(btn);
+
+        // default select first color (unless initialColorParam provided)
+        if (idx === 0 && !initialColorParam) {
+          selectedColorRaw = c;
+          setTimeout(()=>{ highlightSelectedButton(btn); rebuildTintedFrame(); }, 10);
+        }
+      });
+
+      // clear option
+      const clearBtn = document.createElement('div'); clearBtn.className='color-btn clear'; clearBtn.dataset.color='none'; clearBtn.title='No tint';
+      clearBtn.addEventListener('click', () => { selectedColorRaw = null; rebuildTintedFrame(); highlightSelectedButton(clearBtn); });
+      colorPickerEl.appendChild(clearBtn);
+    }
+
+    // load colors from Firestore doc (if productId supplied)
+    async function loadColorsFromFirestore() {
+      if (!productId) return false;
+      try {
+        const docRef = doc(db, 'products', productId);
+        const snap = await getDoc(docRef);
+        if (!snap.exists()) return false;
+        const product = snap.data();
+        const colors = Array.isArray(product.colors) ? product.colors : [];
+        populatePickerFromArray(colors);
+
+        // if initialColorParam present, apply it (prefer this over first saved)
+        if (initialColorParam) {
+          // find matching button (case-insensitive)
+          const nodes = Array.from(document.querySelectorAll('#colorPicker .color-btn'));
+          let matched = nodes.find(n => (n.dataset.color || '').toLowerCase() === initialColorParam.toLowerCase());
+          if (matched) {
+            matched.click(); // triggers rebuildTintedFrame & highlight
+          } else {
+            // create ephemeral button for the initial color if not in list
+            const extra = document.createElement('div'); extra.className='color-btn'; extra.dataset.color = initialColorParam;
+            try { extra.style.background = initialColorParam; } catch(e){ extra.style.background = '#ccc'; }
+            extra.title = initialColorParam;
+            extra.addEventListener('click', async () => { selectedColorRaw = initialColorParam; await rebuildTintedFrame(); highlightSelectedButton(extra); });
+            colorPickerEl.insertBefore(extra, colorPickerEl.firstChild);
+            extra.click();
+          }
+        }
+
+        return true;
+      } catch (err) {
+        console.error('Error reading product colors from Firestore:', err);
+        return false;
+      }
+    }
+
+    // fallback: parse colors param if provided (comma separated)
+    function loadColorsFromUrlParam() {
+      if (!colorsParam) return false;
+      const arr = colorsParam.split(',').map(s => s.trim()).filter(Boolean);
+      if (arr.length===0) return false;
+      populatePickerFromArray(arr);
+      if (initialColorParam) {
+        // try to click matching
+        const nodes = Array.from(document.querySelectorAll('#colorPicker .color-btn'));
+        let matched = nodes.find(n => (n.dataset.color || '').toLowerCase() === initialColorParam.toLowerCase());
+        if (matched) matched.click();
+      }
+      return true;
+    }
+
+    // Try Firestore first, then fallback to colorsParam, then if nothing, use built-in small default palette
+    async function initColorPicker() {
+      const loadedFromFirestore = await loadColorsFromFirestore();
+      if (!loadedFromFirestore) {
+        const loadedFromParam = loadColorsFromUrlParam();
+        if (!loadedFromParam) {
+          // default palette (keeps page usable)
+          populatePickerFromArray(['#000000','#7b3b2e','#e53935','#1e88e5','#2e7d32','#d4af37']);
+          if (initialColorParam) {
+            // try to apply initialColorParam
+            const nodes = Array.from(document.querySelectorAll('#colorPicker .color-btn'));
+            const matched = nodes.find(n => (n.dataset.color||'').toLowerCase() === initialColorParam.toLowerCase());
+            if (matched) matched.click();
+            else {
+              // if it's a color string not in palette, create extra and click
+              const extra = document.createElement('div'); extra.className='color-btn'; extra.dataset.color = initialColorParam;
+              try { extra.style.background = initialColorParam; } catch(e){ extra.style.background = '#ccc'; }
+              extra.title = initialColorParam;
+              extra.addEventListener('click', async ()=> { selectedColorRaw = initialColorParam; await rebuildTintedFrame(); highlightSelectedButton(extra); });
+              colorPickerEl.insertBefore(extra, colorPickerEl.firstChild);
+              extra.click();
+            }
+          }
+        }
+      }
+    }
+
+    // ---------------- Capture & modal (untouched behavior) ----------------
+    const flash = document.getElementById('flashEffect');
+    const modal = document.getElementById('previewModal');
+    const capturedImageEl = document.getElementById('capturedImage');
+    document.getElementById('captureBtn').addEventListener('click', () => {
+      flash.style.opacity = '1';
+      setTimeout(()=> { flash.style.opacity = '0'; }, 180);
+      const snapshot = canvas.toDataURL('image/png');
+      capturedImageEl.src = snapshot;
+      modal.style.display = 'flex';
+    });
+    document.getElementById('closeModal').addEventListener('click', ()=> modal.style.display='none');
+    document.getElementById('downloadBtn').addEventListener('click', ()=> {
+      const a = document.createElement('a'); a.href = capturedImageEl.src; a.download = 'tryon_glasses.png'; a.click();
+    });
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      if (!navigator.share) { alert('Sharing not supported in this browser. Please download and share manually.'); return; }
+      try {
+        const blob = await (await fetch(capturedImageEl.src)).blob();
+        const file = new File([blob], 'tryon_glasses.png', { type:'image/png' });
+        await navigator.share({ title:'My Try-On', text:'Look at this!', files:[file] });
+      } catch (err) { console.error(err); alert('Share failed.'); }
+    });
+
+    // ------- Initialize everything -------
+    // 1) Build color picker (tries Firestore using productId; falls back)
+    await initColorPicker();
+
+   
+
+    // Done. The page keeps all previous functionality and now shows dynamic color palette.
+    console.log('position.html initialized — productId:', productId, ', image:', imageUrl, ', initialColor:', initialColorParam);
+
+  </script>
+</body>
+</html>

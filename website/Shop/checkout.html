@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 text-lg p-6">
+
+<div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10">
+ <!-- LEFT: Product Info -->
+<!-- LEFT SIDE -->
+<div class="space-y-5">
+
+  <!-- PRODUCT BOX -->
+  <div class="bg-white border border-gray-200 p-6 rounded-2xl shadow-lg mt-10
+              flex flex-col items-center space-y-4">
+
+    <p id="product-brand" class="text-xl text-gray-600 font-semibold">
+      Brand Name
+    </p>
+
+    <h2 id="product-name" class="text-3xl font-bold text-center">
+      Product Name
+    </h2>
+
+    <img
+      id="product-image"
+      src=""
+      alt="Product Image"
+      class="h-60 object-contain"
+    />
+
+  </div>
+
+  <!-- PAYMENT BOX -->
+  <div class="bg-white border border-gray-200 p-6 rounded-2xl shadow-lg">
+
+    <h3 class="text-2xl font-bold mb-4">
+      Online Payment
+    </h3>
+
+    <!-- JazzCash -->
+    <div class="border rounded-xl p-4 mb-4">
+      <h4 class="text-xl font-semibold mb-2">NayaPay Account</h4>
+
+      <p><strong>Account Name:</strong> Muhammad Zaid Javaid</p>
+      <p><strong>Number:</strong> 03XXXXXXXXX</p>
+
+      <img
+        src="/FYP-2024/FYP/OpticSuiteImages/Shop/WhatsApp Image 2026-05-18 at 11.18.51 PM.jpeg"
+        alt="JazzCash QR"
+        class="w-40 mt-3 rounded-lg border"
+      />
+    </div>
+
+    <!-- Bank -->
+    <div class="border rounded-xl p-4 mb-4">
+      <h4 class="text-xl font-semibold mb-2">Bank Transfer</h4>
+
+      <p><strong>Bank:</strong> Meezan Bank</p>
+      <p><strong>Account Title:</strong> Muhammad Zaid Javaid</p>
+      <p><strong>Account Number:</strong> 04160114381973</p>
+      <p><strong>IBAN:</strong> PK46MEZN0004160114381973</p>
+      <img
+        src="/FYP-2024/FYP/OpticSuiteImages/Shop/WhatsApp Image 2026-05-18 at 11.20.00 PM.jpeg"
+        alt="JazzCash QR"
+        class="w-40 mt-3 rounded-lg border"
+      />
+    </div>
+
+    <!-- WhatsApp Button -->
+    <a
+      href="https://wa.link/5o3doy"
+      target="_blank"
+      class="block w-full text-center py-3 bg-green-600 text-white rounded-xl text-lg hover:bg-green-700 transition"
+    >
+      Send Screenshot on WhatsApp
+    </a>
+
+  </div>
+
+</div>
+
+  <!-- RIGHT: Checkout Summary + Customer Info -->
+  <div class="space-y-6">
+    <h2 class="text-3xl font-bold mb-4">Review your selection</h2>
+
+ <!-- Order Summary -->
+<div id="order-summary" class="bg-white p-5 rounded-2xl space-y-3 shadow border border-gray-200 text-lg">
+  <div class="flex justify-between items-center">
+    <span><strong>Color:</strong> <span id="review-color">-</span></span>
+  </div>
+  <div class="flex justify-between items-center">
+    <span><strong>Size:</strong> <span id="review-size">-</span></span>
+  </div>
+  <div class="flex justify-between items-center">
+    <span><strong>Frame Price:</strong> Rs <span id="review-frame-price">0</span></span>
+  </div>
+
+  <!-- Show cross only for removable items -->
+  <div class="flex justify-between items-center">
+    <span><strong>Prescription Type:</strong> <span id="prescription-type">-</span> (Rs <span id="prescription-price">0</span>)</span>
+    <button class="text-red-500 remove-btn" data-field="prescription">✖</button>
+  </div>
+  <div class="flex justify-between items-center">
+    <span><strong>Single Vision:</strong> <span id="single-vision">-</span> (Rs <span id="single-vision-price">0</span>)</span>
+    <button class="text-red-500 remove-btn" data-field="singleVision">✖</button>
+  </div>
+  <div class="flex justify-between items-center">
+    <span><strong>Lens Type:</strong> <span id="lens-type">-</span> (Rs <span id="lens-price">0</span>)</span>
+    <button class="text-red-500 remove-btn" data-field="lens">✖</button>
+  </div>
+  <div class="flex justify-between items-center">
+    <span><strong>Cleaning Kit:</strong> <span id="cleaning-kit">No</span> (Rs <span id="cleaning-kit-price">0</span>)</span>
+    <button class="text-red-500 remove-btn" data-field="cleaningKit">✖</button>
+  </div>
+</div>
+
+    <!-- Customer Info Form -->
+    <div class="bg-white p-5 rounded-2xl shadow border border-gray-200 space-y-4">
+      <h3 class="text-2xl font-semibold">Your Information</h3>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <input id="customer-name" type="text" placeholder="Full Name" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-black"/>
+        <input id="customer-email" type="email" placeholder="Email Address" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-black"/>
+      </div>
+
+     <div class="grid md:grid-cols-2 gap-4">
+        <input id="customer-phone" type="text" placeholder="Phone Number" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-black"/>
+        <input id="customer-city" type="text" placeholder="City" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-black"/>
+        <input id="customer-size" type="text" placeholder="Enter Size (US/EU or mm)" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-black"/>
+      </div>
+
+      <textarea id="customer-address" placeholder="Full Address (Street, House No, etc.)" rows="3" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-black"></textarea>
+    </div>
+
+    <div class="text-xl font-semibold">
+      Total Price: <span id="total-price">Rs 0</span>
+    </div>
+
+    <button id="checkout-btn" class="w-full py-3 bg-black text-white rounded-xl text-lg hover:bg-gray-900 transition">
+      Place Order
+    </button>
+  </div>
+</div>
+
+<!-- NEW: Order Success Modal -->
+<div id="orderModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+  <div class="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full text-center relative">
+    <button id="closeModal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <div class="flex justify-center mb-4">
+      <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+    </div>
+    <h2 class="text-2xl font-bold mb-2">Your order has been placed!</h2>
+    <p class="text-gray-600 mb-4">Thank you for shopping with us. We’ll notify you when your order is processed.</p>
+    <button 
+  class="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-900"
+  onclick="window.location.href='landing(shop)page.html'">
+  OK
+</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "YOUR_FIREBASE_API_KEY",
+  authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+  projectId: "YOUR_FIREBASE_PROJECT_ID",
+  storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+  appId: "YOUR_FIREBASE_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const orderId = localStorage.getItem("orderId");
+
+let data = {};
+let isLocalOrder = false;
+
+if (orderId) {
+  const docRef = doc(db, "checkout-session", orderId);
+  const docSnap = await getDoc(docRef);
+  if (!docSnap.exists()) {
+    alert("❌ Order not found. Please start again.");
+    window.location.href = "index.html";
+  }
+  data = docSnap.data();
+} else {
+  isLocalOrder = true;
+  data = {
+    productName: localStorage.getItem("productName") || "Product Name",
+    productBrand: localStorage.getItem("productBrand") || "Brand Name",
+    productImage: localStorage.getItem("productImage") || "",
+    color: localStorage.getItem("color") || "-",
+    size: localStorage.getItem("size") || "-",
+    productPrice: parseInt(localStorage.getItem("productPrice")) || 0,
+    prescriptionType: localStorage.getItem("prescriptionType") || "-",
+    prescriptionPrice: parseInt(localStorage.getItem("prescriptionPrice")) || 0,
+    singleVisionType: localStorage.getItem("singleVisionType") || "-",
+    singleVisionPrice: parseInt(localStorage.getItem("singleVisionPrice")) || 0,
+    lensType: localStorage.getItem("lensType") || "-",
+    lensPrice: parseInt(localStorage.getItem("lensPrice")) || 0,
+    cleaningKit: localStorage.getItem("cleaningKit") || "No",
+    cleaningKitPrice: parseInt(localStorage.getItem("cleaningKitPrice")) || 0,
+    userEmail: localStorage.getItem("userEmail") || "Guest",
+  };
+}
+
+// Function to calculate total
+function calculateTotal() {
+  data.totalPrice =
+    (data.productPrice || 0) +
+    (data.prescriptionPrice || 0) +
+    (data.singleVisionPrice || 0) +
+    (data.lensPrice || 0) +
+    (data.cleaningKitPrice || 0);
+  document.getElementById("total-price").textContent = `Rs ${data.totalPrice}`;
+}
+
+// Initial total
+calculateTotal();
+
+// Handle remove buttons
+document.querySelectorAll(".remove-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const field = btn.dataset.field;
+
+    if (field === "prescription") {
+      data.prescriptionType = "-";
+      data.prescriptionPrice = 0;
+      document.getElementById("prescription-type").textContent = "-";
+      document.getElementById("prescription-price").textContent = "0";
+    }
+    if (field === "singleVision") {
+      data.singleVisionType = "-";
+      data.singleVisionPrice = 0;
+      document.getElementById("single-vision").textContent = "-";
+      document.getElementById("single-vision-price").textContent = "0";
+    }
+    if (field === "lens") {
+      data.lensType = "-";
+      data.lensPrice = 0;
+      document.getElementById("lens-type").textContent = "-";
+      document.getElementById("lens-price").textContent = "0";
+    }
+    if (field === "cleaningKit") {
+      data.cleaningKit = "No";
+      data.cleaningKitPrice = 0;
+      document.getElementById("cleaning-kit").textContent = "No";
+      document.getElementById("cleaning-kit-price").textContent = "0";
+    }
+
+    calculateTotal();
+  });
+});
+
+// Populate product info
+document.getElementById("product-name").textContent = data.productName;
+document.getElementById("product-brand").textContent = data.productBrand;
+document.getElementById("product-image").src = data.productImage;
+document.getElementById("review-color").textContent = data.color;
+document.getElementById("review-size").textContent = data.size;
+document.getElementById("review-frame-price").textContent = data.productPrice;
+document.getElementById("prescription-type").textContent = data.prescriptionType;
+document.getElementById("prescription-price").textContent = data.prescriptionPrice;
+document.getElementById("single-vision").textContent = data.singleVisionType;
+document.getElementById("single-vision-price").textContent = data.singleVisionPrice;
+document.getElementById("lens-type").textContent = data.lensType;
+document.getElementById("lens-price").textContent = data.lensPrice;
+document.getElementById("cleaning-kit").textContent = data.cleaningKit;
+document.getElementById("cleaning-kit-price").textContent = data.cleaningKitPrice;
+
+// Place order
+document.getElementById("checkout-btn").addEventListener("click", async () => {
+  try {
+    const customerName = document.getElementById("customer-name").value.trim();
+    const customerEmail = document.getElementById("customer-email").value.trim();
+    const customerPhone = document.getElementById("customer-phone").value.trim();
+    const customerCity = document.getElementById("customer-city").value.trim();
+    const customerSize = document.getElementById("customer-size").value.trim();
+    const customerAddress = document.getElementById("customer-address").value.trim();
+
+    const sizeRegex = /^[A-Za-z0-9\s/-]+$/; // allows letters, numbers, spaces, / and -
+    if (!sizeRegex.test(customerSize)) {
+      alert("⚠️ Invalid size format.");
+      return;
+    }
+    if (!customerName || !customerEmail || !customerPhone || !customerCity || !customerAddress) {
+      alert("⚠️ Please fill all customer information.");
+      return;
+    }
+
+    // Update size and recalc total
+    data.size = customerSize;
+    calculateTotal();
+
+    const orderData = {
+      productName: data.productName,
+      productBrand: data.productBrand,
+      productImage: data.productImage,
+      color: data.color,
+      size: data.size,
+      productPrice: data.productPrice,
+      prescriptionType: data.prescriptionType,
+      prescriptionPrice: data.prescriptionPrice,
+      singleVisionType: data.singleVisionType,
+      singleVisionPrice: data.singleVisionPrice,
+      lensType: data.lensType,
+      lensPrice: data.lensPrice,
+      cleaningKit: data.cleaningKit,
+      cleaningKitPrice: data.cleaningKitPrice,
+      totalPrice: data.totalPrice,
+      status: "Pending",
+      userEmail: data.userEmail || "Guest",
+      orderDate: serverTimestamp(),
+      customerName,
+      customerEmail,
+      customerPhone,
+      customerCity,
+      customerAddress,
+    };
+
+    if (isLocalOrder) {
+      const randomId = Math.random().toString(36).substr(2, 10);
+      await setDoc(doc(db, "orders", randomId), orderData);
+    } else {
+      await setDoc(doc(db, "orders", orderId), orderData);
+      await deleteDoc(doc(db, "checkout-session", orderId));
+    }
+
+    document.getElementById("orderModal").classList.remove("hidden");
+    localStorage.clear();
+
+  } catch (err) {
+    console.error("❌ Error placing order:", err);
+    alert("Failed to place order.");
+  }
+});
+
+// Modal close button
+document.getElementById("closeModal").addEventListener("click", () => {
+  document.getElementById("orderModal").classList.add("hidden");
+});
+</script>
+</body>
+</html>

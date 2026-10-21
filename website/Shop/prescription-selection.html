@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Select Prescription</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" src="./firebase-init.js"></script>
+</head>
+<body class="bg-white text-gray-800 text-xl p-10">
+
+<div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10">
+  <!-- LEFT: Product Info -->
+  <div class="bg-gray-100 border border-gray-400 p-6 rounded-xl shadow flex flex-col items-center justify-center h-full space-y-4 md:max-w-xl w-full">
+    <p id="product-brand" class="text-xl text-gray-600 font-semibold">Brand Name</p>
+    <h2 id="product-name" class="text-3xl font-bold text-center">Product Name</h2>
+    <img id="product-image" src="" alt="Product Image" class="h-60 object-contain" />
+  </div>
+
+  <!-- RIGHT: Prescription Selection -->
+  <div>
+    <h2 class="text-2xl font-bold mb-6">Select your prescription type</h2>
+    <div class="space-y-4">
+      <button onclick="selectPrescription('Single Vision', 3100)" class="w-full text-left p-4 rounded-xl bg-gray-100 hover:bg-gray-200 shadow border">
+        <div class="font-bold">Single Vision</div>
+        <div class="text-sm text-gray-700">Corrects for one field of vision (near, intermediate, or distance.)</div>
+        <div class="font-medium mt-1">Rs 3100</div>
+      </button>
+
+      <button onclick="selectPrescription('Progressives', 3200)" class="w-full text-left p-4 rounded-xl bg-gray-100 hover:bg-gray-200 shadow border">
+        <div class="font-bold">Progressives</div>
+        <div class="text-sm text-gray-700">Corrects near, intermediate, and distance fields of vision.</div>
+        <div class="font-medium mt-1">Rs 3200</div>
+      </button>
+
+      <button onclick="selectPrescription('Non-prescription', 2800)" class="w-full text-left p-4 rounded-xl bg-gray-100 hover:bg-gray-200 shadow border">
+        <div class="font-bold">Non-prescription</div>
+        <div class="text-sm text-gray-700">Offers style and protection with no vision correction.</div>
+        <div class="font-medium mt-1">Rs 2800</div>
+      </button>
+
+      <button onclick="selectPrescription('Readers', 2500)" class="w-full text-left p-4 rounded-xl bg-gray-100 hover:bg-gray-200 shadow border">
+        <div class="font-bold">Readers</div>
+        <div class="text-sm text-gray-700">Offers magnification for reading (no prescription).</div>
+        <div class="font-medium mt-1">Rs 2500</div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { db } from './firebase-init.js';
+  import { collection, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+  // Set product info
+  document.getElementById("product-name").textContent = localStorage.getItem("productName") || "Product Name";
+  document.getElementById("product-brand").textContent = localStorage.getItem("productBrand") || "Brand Name";
+  document.getElementById("product-image").src = localStorage.getItem("productImage") || "default.jpg";
+
+  // Attach globally so inline onclick works
+ window.selectPrescription = async function(type, price) {
+  try {
+    localStorage.setItem("prescriptionType", type);
+    localStorage.setItem("prescriptionPrice", price);
+
+    let orderId = localStorage.getItem("orderId");
+    let orderRef;
+
+    if (orderId) {
+      // Use existing document
+      orderRef = doc(db, "checkout-session", orderId);
+    } else {
+      // Create new document
+      orderRef = doc(collection(db, "checkout-session"));
+      localStorage.setItem("orderId", orderRef.id);
+    }
+
+    // Save or update data with merge
+   await setDoc(orderRef, {
+  productName: localStorage.getItem("productName"),
+  productBrand: localStorage.getItem("productBrand"),
+  productImage: localStorage.getItem("productImage"),
+  productPrice: parseInt(localStorage.getItem("productPrice")) || 0,
+  color: localStorage.getItem("productColor") || "-",
+  size: localStorage.getItem("productSize") || "-",
+  
+  prescriptionType: type,
+  prescriptionPrice: price,
+  createdAt: new Date().toISOString()
+}, { merge: true });
+
+
+    window.location.href = "singlevision.html";
+  } catch (err) {
+    alert("Something went wrong. Check console.");
+    console.error("Firebase Error:", err);
+  }
+};
+
+</script>
+</body>
+</html>

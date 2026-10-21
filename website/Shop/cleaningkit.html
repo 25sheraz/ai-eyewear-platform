@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cleaning Kit Add-on</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+   <script type="module" src="./firebase-init.js"></script>
+</head>
+<body class="bg-white text-gray-800 text-xl p-10">
+
+<div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10">
+
+  <!-- LEFT: Product Info -->
+  <div class="bg-gray-100 border border-gray-400 p-6 rounded-xl shadow flex flex-col items-center justify-center space-y-4 md:max-w-xl w-full h-[550px]">
+    <p id="product-brand" class="text-xl text-gray-600 font-semibold">Brand Name</p>
+    <h2 id="product-name" class="text-3xl font-bold text-center">Product Name</h2>
+    <img id="product-image" src="" alt="Product Image" class="h-60 object-contain" />
+  </div>
+
+  <!-- RIGHT: Cleaning Kit Add-on -->
+  <div class="flex flex-col justify-between space-y-8">
+
+    <!-- Heading -->
+    <div>
+      <h2 class="text-3xl font-bold text-center mb-4 mt-12" >Want to add a lens cleaning <br>kit?</h2>
+      <p class="text-gray-700 text-lg text-center mb-6">
+       It include anti-fog spray,a micro-fiber cloth,and <br>a microfiber lens pouch-convinient!
+      </p>
+<!-- Updated Gray Info Box -->
+<div class="bg-gray-100 border border-gray-300 rounded-xl p-6 shadow mt-8 flex justify-between items-center">
+  <!-- Left: Label -->
+  <div class="text-2xl font-semibold text-gray-800">
+    Cleaning Kit
+  </div>
+
+  <!-- Right: Price and Note -->
+  <div class="text-right">
+    <p class="text-xl font-semibold">Rs 300</p>
+    
+  </div>
+</div>
+
+
+ <!-- Buttons -->
+<div class="flex gap-6 mt-10">
+  <button onclick="skipKit()" class="flex-1 py-3 border border-black text-black rounded-2xl text-lg hover:bg-gray-100">
+    No, thanks
+  </button>
+  <button onclick="addKit()" class="flex-1 py-3 bg-black text-white rounded-2xl text-lg hover:bg-gray-900">
+    Add to cart
+  </button>
+</div>
+
+  </div>
+</div>
+<script type="module">
+  import { db } from './firebase-init.js';
+  import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+  // Load and show product info
+  document.getElementById("product-name").textContent = localStorage.getItem("productName") || "Product Name";
+  document.getElementById("product-brand").textContent = localStorage.getItem("productBrand") || "Brand Name";
+  document.getElementById("product-image").src = localStorage.getItem("productImage") || "default.jpg";
+
+  const orderId = localStorage.getItem("orderId");
+
+  async function skipKit() {
+    localStorage.setItem("cleaningKit", "No");
+    localStorage.setItem("cleaningKitPrice", 0);
+
+    if (orderId) {
+      const orderRef = doc(db, "checkout-session", orderId);
+   await setDoc(orderRef, {
+  cleaningKit: "No",
+  cleaningKitPrice: 0
+}, { merge: true });
+
+    }
+
+    window.location.href = "checkout.html";
+  }
+
+  async function addKit() {
+    localStorage.setItem("cleaningKit", "Yes");
+    localStorage.setItem("cleaningKitPrice", 300);
+
+    if (orderId) {
+      const orderRef = doc(db, "checkout-session", orderId);
+      await setDoc(orderRef, {
+  cleaningKit: "Yes",
+  cleaningKitPrice: 300
+}, { merge: true });
+
+    }
+
+    window.location.href = "checkout.html";
+  }
+
+  // Expose functions globally
+  window.skipKit = skipKit;
+  window.addKit = addKit;
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Your Password</title>
+
+    <link rel="stylesheet" href="output.css">
+    <script src="reset.js" defer type="module"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .bg-blur {
+            filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center h-screen bg-gray-100">
+    <div class="absolute inset-0 bg-cover bg-center bg-blur" style="background-image: url('/FYP-2024/FYP/OpticSuiteImageS/freepik__upload__65563.png');"></div>
+
+    <div class="relative z-10 flex flex-col justify-center items-center p-8 space-y-4">
+        <div class="flex items-center space-x-2 mt-4 mb-28">
+            <img src="/FYP-2024/FYP/OpticSuiteImages/circlelogo.png" alt="Logo" class="w-15 h-10">
+            <span class="text-black text-2xl font-semibold">Optic Suit</span>
+        </div>
+        <h1 class="text-black text-3xl font-bold">Reset Your Password</h1>
+        <p class="text-black text-sm">Enter your Email address and we will send you <br> instructions to reset your password.</p>
+
+        <!-- Fixed input field with ID -->
+        <input type="email" id="email" placeholder="Email Address" class="w-64 px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+        <!-- Use button instead of anchor tag -->
+        <button id="reset" class="w-64 py-2 bg-black text-white rounded-md mt-4 block text-center hover:bg-gray-800">Continue</button>
+
+        <a href="/FYP-2024/website/loginpages/SignInPage.html" class="text-black text-sm font-bold mt-4 hover:underline">Back to Login</a>
+    </div>
+</body>
+</html>

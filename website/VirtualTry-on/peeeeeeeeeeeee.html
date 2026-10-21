@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Virtual Glasses Try-On</title>
+
+  <!-- Tailwind (IMPORTANT) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="visual.css">
+
+  <!-- FaceMesh + Camera utils -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* small helper styles for the new controls */
+    .color-btn { width:36px; height:36px; border-radius:999px; border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,0.12); cursor:pointer; }
+    .color-btn.selected { outline:3px solid #fff; transform:scale(1.05); }
+    #accuracyControls input { -webkit-appearance: none; appearance: none; }
+    #distanceHint { min-width:220px; text-align:center; }
+    #accuracyBadge { font-weight:600; padding:6px 10px; border-radius:999px; }
+  </style>
+</head>
+<body class="bg-gray-100 font-[Poppins]">
+
+  <!-- 🎥 Virtual Try-On -->
+  <section class="relative w-full h-screen bg-black overflow-hidden">
+    <!-- video & canvas layered -->
+    <video class="input_video absolute inset-0 w-full h-full object-cover z-0" autoplay muted playsinline></video>
+    <canvas class="output_canvas absolute inset-0 w-full h-full z-10"></canvas>
+
+    <!-- guide + notice -->
+    <div class="guide-box z-30"></div>
+    <div id="notice"
+         class="absolute top-5 left-1/2 -translate-x-1/2 text-white font-semibold
+                bg-black/50 px-4 py-2 rounded-lg z-40">
+      🕶 Please remove your glasses and align your face in the box
+    </div>
+
+    <!-- Frame Size Display -->
+    <div id="frameSizeDisplay"
+         style="position:absolute; top:50%; left:10px; transform:translateY(-50%);
+                background:rgba(255,255,255,0.95); padding:8px 14px;
+                border-radius:8px; font-weight:600; color:#333;
+                font-size:14px; box-shadow:0 4px 8px rgba(0,0,0,0.15);
+                z-index:60; display:none;">
+      Frame Width: -- mm
+    </div>
+
+    <!-- ✅ Accuracy Controls (auto-estimate + hint + badge) -->
+    <div id="accuracyControls"
+         class="absolute top-20 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3
+                bg-black/50 text-white px-4 py-2 rounded-xl">
+      <div id="distanceHint" class="text-sm text-yellow-300">Hold your face in the frame</div>
+      <div id="accuracyBadge" class="bg-gray-800 text-xs">Status: Unknown</div>
+      <button id="autoEstimateBtn"
+              class="px-3 py-1 bg-emerald-600 rounded-lg text-sm hover:bg-emerald-700">
+        Auto Estimate
+      </button>
+    </div>
+
+    <!-- Color Picker -->
+    <div id="colorPicker"
+         class="color-picker absolute top-1/2 right-4 -translate-y-1/2 flex flex-col gap-3 z-40"></div>
+
+    <!-- Action Buttons -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-4 z-40">
+      <button id="adjustToggleBtn"
+              class="px-5 py-2 bg-black text-white rounded-xl shadow-md transition">
+        Adjust Glasses
+      </button>
+      <button id="captureBtn"
+              class="px-5 py-2 bg-black text-white rounded-xl shadow-md transition">
+        📸 Capture
+      </button>
+      <!-- Finalize Button (existing) -->
+      <button id="finalizeBtn"
+              class="px-5 py-2 bg-black text-white rounded-xl shadow-md  transition">
+        Finalize Size
+      </button>
+    </div>
+  </section>
+
+  <!-- Flash -->
+  <div id="flashEffect"></div>
+
+  <!-- Modal -->
+  <div id="previewModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal">&times;</span>
+      <h2>📸 Your Try-On</h2>
+      <img id="capturedImage" src="" alt="Captured Photo" style="max-width:100%; border-radius:10px; margin-top:10px;">
+      <div class="modal-actions">
+        <button id="downloadBtn">⬇️ Download</button>
+        <button id="shareBtn">📤 Share</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Products -->
+  <section class="bg-gray-50 py-12 px-6 border-t border-gray-200">
+    <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+      Related Products
+    </h2>
+
+    <!-- Horizontal scroll row -->
+    <div id="related-products" class="flex gap-6 overflow-x-auto pb-2 hide-scrollbar">
+      <!-- Cards injected by JS -->
+    </div>
+  </section>
+
+  <script type="module">
+    // ====== Firebase imports (module) ======
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, collection, query, where, getDocs }
+      from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+    const $ = sel => document.querySelector(sel);
+
+    // URL params
+    const urlParams = new URLSearchParams(window.location.search || "");
+    const productId = urlParams.get('id') || '';
+    const imageUrlParam = urlParams.get('img') || '';
+    const colorsParam = urlParams.get('colors') || '';
+    const initialColorParam = urlParams.get('selectedColor') || urlParams.get('color') || null;
+    const categoryParam = urlParams.get('category') || '';
+
+    // Firebase config (your existing)
+    const firebaseConfig = {
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+      projectId: "YOUR_FIREBASE_PROJECT_ID",
+      storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+      appId: "YOUR_FIREBASE_APP_ID"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // DOM refs
+    const video = $('.input_video');
+    const canvas = $('.output_canvas');
+    const ctx = canvas.getContext('2d');
+    const colorPickerEl = $('#colorPicker');
+    const notice = $('#notice');
+    const distanceHintEl = $('#distanceHint');
+    const accuracyBadge = $('#accuracyBadge');
+
+    // Glasses image
+    const glassesImage = new Image();
+    glassesImage.crossOrigin = "anonymous";
+
+    // Set src later after we try to load product
+    let baseGlassesImageUrl = imageUrlParam || "/FYP-2024/FYP/OpticSuiteImages/product/Glasses1.png";
+
+    // Tinting state
+    let selectedColorRaw = null;
+    let tintedFrameImg = null;
+    let frameMaskCanvas = null;
+    let pickerInitialized = false;
+
+    // When glasses image loads, build the mask
+    glassesImage.addEventListener('load', () => {
+      try { buildFrameMask(); } catch(e) { console.error("mask build error:", e); }
+      if (selectedColorRaw) rebuildTintedFrame();
+    });
+    glassesImage.addEventListener('error', (e) => console.error("Failed to load glasses image", e));
+
+    function resizeCanvas() {
+      // protect against 0-sized video while camera initializes
+      if (video.videoWidth && video.videoHeight) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+      }
+    }
+
+    // ---------------- FaceMesh ----------------
+    const faceMesh = new FaceMesh({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+    });
+    faceMesh.setOptions({
+      maxNumFaces:1,
+      refineLandmarks:true, // IMPORTANT: gives iris landmarks for better center
+      minDetectionConfidence:0.6,
+      minTrackingConfidence:0.6
+    });
+
+    // smoothing helpers (your original)
+    let prevX = 0, prevY = 0, prevAngle = 0, prevWidth = 0;
+    function smooth(value, prev, factor = 0.3) { return prev + (value - prev) * factor; }
+
+    // manual adjust state (your original)
+    let manualMode=false, manualX=0, manualY=0, manualAngle=0, manualWidth=0;
+    let dragOffsetX=0, dragOffsetY=0;
+    $('#adjustToggleBtn').addEventListener('click', () => {
+      manualMode = !manualMode;
+      $('#adjustToggleBtn').textContent = manualMode ? "✅ Lock Glasses" : "Adjust Glasses";
+      if (manualMode) { manualX = prevX; manualY = prevY; manualAngle = prevAngle; manualWidth = prevWidth; }
+    });
+
+    function getMousePos(e) {
+      const rect = canvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+    let isDragging=false;
+    canvas.addEventListener('mousedown', (e) => {
+      if(!manualMode) return;
+      const {x,y}=getMousePos(e);
+      dragOffsetX = manualX - x; dragOffsetY = manualY - y;
+      isDragging=true;
+    });
+    canvas.addEventListener('mousemove', (e) => {
+      if(!manualMode||!isDragging) return;
+      const {x,y}=getMousePos(e);
+      manualX = x + dragOffsetX; manualY = y + dragOffsetY;
+    });
+    ['mouseup','mouseleave'].forEach(ev => canvas.addEventListener(ev,()=>{isDragging=false;}));
+    canvas.addEventListener('wheel', (e) => {
+      if (!manualMode) return;
+      e.preventDefault();
+      if (e.shiftKey) manualAngle += e.deltaY * -0.003;
+      else { manualWidth += e.deltaY * -0.5; if (manualWidth < 50) manualWidth = 50; }
+    }, { passive:false });
+
+    // draw function (kept intact, small change: draws tinted overlay same as before)
+    function drawGlasses(landmarks) {
+      let posX,posY,angle,glassesWidth;
+      if (manualMode) {
+        posX = canvas.width - manualX; posY = manualY; angle = manualAngle; glassesWidth = manualWidth;
+      } else {
+        const leftEye = landmarks[133], rightEye = landmarks[362], nose = landmarks[1],
+              leftTemple = landmarks[234], rightTemple = landmarks[454];
+
+        const eyeCenterX = ((leftEye.x + rightEye.x)/2) * canvas.width;
+        const eyeCenterY = ((leftEye.y + rightEye.y)/2) * canvas.height;
+        const faceWidth = Math.hypot(
+          (rightTemple.x-leftTemple.x)*canvas.width,
+          (rightTemple.y-leftTemple.y)*canvas.height
+        );
+        const ang = Math.atan2(
+          (rightEye.y-leftEye.y)*canvas.height,
+          (rightEye.x-leftEye.x)*canvas.width
+        );
+        const avgZ = (leftEye.z + rightEye.z + nose.z)/3; const scaleZ = 1 + avgZ*0.5;
+        const targetWidth = faceWidth * 1.1 * scaleZ;
+
+        const x = smooth(eyeCenterX, prevX, 0.2);
+        const y = smooth(eyeCenterY, prevY, 0.2);
+        const a = smooth(ang, prevAngle, 0.2);
+        const w = smooth(targetWidth, prevWidth, 0.2);
+        prevX=x; prevY=y; prevAngle=a; prevWidth=w;
+
+        posX=x; posY=y; angle=a; glassesWidth=w;
+      }
+
+      const height = glassesWidth * (glassesImage.height / glassesImage.width);
+      ctx.save();
+      // mirrored space (your original)
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1,1);
+      ctx.translate(posX,posY);
+      ctx.rotate(angle);
+      ctx.drawImage(glassesImage, -glassesWidth/2, -height/2, glassesWidth, height);
+      if (tintedFrameImg) ctx.drawImage(tintedFrameImg, -glassesWidth/2, -height/2, glassesWidth, height);
+      ctx.restore();
+    }
+
+    // ---------------- Accuracy system (NEW) ----------------
+    // state
+    let userIPDmm = null;           // unused normally (no input), available if you later add input
+    let pxToMmScale = null;         // computed scale (px -> mm)
+    let lastEyeDistPx = null;       // latest eye distance in px
+    let lastTemplePx = null;        // latest temple distance in px
+    let distanceOK = false;
+    let stableCounter = 0;
+    const REQUIRED_STABLE_FRAMES = 8;
+    // distance gate thresholds (frame height ratio)
+    const FACE_HEIGHT_MIN = 0.28;
+    const FACE_HEIGHT_MAX = 0.40;
+    const zBuffer = [];
+    const Z_BUFFER_LEN = 10;
+    const ASSUMED_TEMPLE_MM = 135; // average adult temple-to-temple for scale fallback
+
+    // helpers
+    function centroid(landmarks, idxs) {
+      let sx = 0, sy = 0, n = idxs.length;
+      for (const i of idxs) { sx += landmarks[i].x; sy += landmarks[i].y; }
+      return { x: sx / n, y: sy / n };
+    }
+    function getEyeCentersPx(landmarks, cw, ch) {
+      // iris points provided by refineLandmarks: left 468..472, right 473..477
+      const leftIrisIdxs  = [468,469,470,471,472];
+      const rightIrisIdxs = [473,474,475,476,477];
+      const lc = centroid(landmarks, leftIrisIdxs);
+      const rc = centroid(landmarks, rightIrisIdxs);
+      return {
+        lx: lc.x * cw,
+        ly: lc.y * ch,
+        rx: rc.x * cw,
+        ry: rc.y * ch
+      };
+    }
+    function updateDistanceGate(landmarks, cw, ch) {
+      // chin (152) and forehead (10) approximate vertical face span
+      const chin = landmarks[152], forehead = landmarks[10];
+      const faceHeightPx = Math.abs((chin.y - forehead.y) * ch);
+      const ratio = faceHeightPx / ch;
+      distanceOK = (ratio >= FACE_HEIGHT_MIN && ratio <= FACE_HEIGHT_MAX);
+      return { ratio, faceHeightPx };
+    }
+    function updateStability(landmarks) {
+      // use a few z landmarks (nose tip 1, left eye 33, right eye 263)
+      const idxs = [1, 33, 263];
+      let zsum = 0;
+      for (const i of idxs) zsum += landmarks[i].z;
+      const zavg = zsum / idxs.length;
+      zBuffer.push(zavg);
+      if (zBuffer.length > Z_BUFFER_LEN) zBuffer.shift();
+      if (zBuffer.length < Z_BUFFER_LEN) return false;
+      const mean = zBuffer.reduce((a,b)=>a+b,0)/zBuffer.length;
+      const variance = zBuffer.reduce((a,b)=>a + (b-mean)*(b-mean), 0)/zBuffer.length;
+      // small variance => stable
+      return variance < 0.00002;
+    }
+
+    // compute scale using temple px and assumed mm (fallback)
+    function computeScaleFromTemple(templePx) {
+      if (!templePx || templePx <= 0) return null;
+      return ASSUMED_TEMPLE_MM / templePx; // px -> mm
+    }
+
+    // update frame size display (modified so it uses pxToMmScale when available)
+    const frameSizeEl = document.getElementById("frameSizeDisplay");
+    let finalizedSize = null;
+
+    function updateFrameSizeDisplay(faceWidthPx, eyeDistPx) {
+      if (!frameSizeEl) return;
+      let scale = pxToMmScale;
+      // fallback if no calibrated scale yet
+      if (!scale && faceWidthPx && faceWidthPx > 0) {
+        scale = computeScaleFromTemple(faceWidthPx);
+      }
+      let glassesWidthPx = manualMode ? manualWidth : prevWidth;
+      let frameWidthMm = scale ? (glassesWidthPx * scale) : 0;
+
+      if (finalizedSize !== null) {
+        frameSizeEl.textContent = `Final Frame Size: ${Math.round(finalizedSize)} mm ✅`;
+      } else {
+        const accuracyTag = pxToMmScale ? "calibrated" : "estimated";
+        frameSizeEl.textContent = `Frame Width: ${Math.round(frameWidthMm)} mm (${accuracyTag})`;
+      }
+      frameSizeEl.style.display = "block";
+    }
+
+    // ---------------- FaceMesh results (modified) ----------------
+    function onResults(results) {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.save();
+      ctx.translate(canvas.width,0);
+      ctx.scale(-1,1);
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
+      ctx.restore();
+
+      if (!results.multiFaceLandmarks || results.multiFaceLandmarks.length===0) {
+        distanceHintEl.textContent = 'No face detected';
+        accuracyBadge.textContent = 'Status: No Face';
+        return;
+      }
+
+      const landmarks = results.multiFaceLandmarks[0];
+
+      // Distance gate & stability
+      const { ratio: faceHeightRatio } = updateDistanceGate(landmarks, canvas.width, canvas.height);
+      const stable = updateStability(landmarks);
+      if (stable) stableCounter = Math.min(stableCounter + 1, 50);
+      else stableCounter = Math.max(stableCounter - 1, 0);
+
+      if (!distanceOK) {
+        distanceHintEl.textContent = faceHeightRatio < FACE_HEIGHT_MIN
+          ? "Move closer to the camera for accurate sizing"
+          : "Move a little farther for accurate sizing";
+        accuracyBadge.textContent = 'Status: Out of range';
+        // still draw overlay so user sees visuals
+        drawGlasses(landmarks);
+      } else if (stableCounter < REQUIRED_STABLE_FRAMES) {
+        distanceHintEl.textContent = "Hold still… calibrating";
+        accuracyBadge.textContent = 'Status: Stabilizing';
+        drawGlasses(landmarks);
+      } else {
+        distanceHintEl.textContent = "Good — ready for estimate";
+        accuracyBadge.textContent = pxToMmScale ? 'Status: Calibrated' : 'Status: Estimating';
+        // now we can safely compute scales
+        // Eye centers (iris) for pupil distance
+        const eyes = getEyeCentersPx(landmarks, canvas.width, canvas.height);
+        const eyeDistPx = Math.hypot(eyes.rx - eyes.lx, eyes.ry - eyes.ly);
+        lastEyeDistPx = eyeDistPx;
+
+        // Temple points for face width
+        const leftTemple = landmarks[234];
+        const rightTemple = landmarks[454];
+        const faceWidthPx = Math.hypot(
+          (rightTemple.x - leftTemple.x) * canvas.width,
+          (rightTemple.y - leftTemple.y) * canvas.height
+        );
+        lastTemplePx = faceWidthPx;
+
+        // If we don't have a calibrated pxToMmScale, compute an estimated one from temples:
+        if (!pxToMmScale && faceWidthPx && faceWidthPx > 0) {
+          pxToMmScale = computeScaleFromTemple(faceWidthPx); // uses assumed 135mm
+          // Also create an estimated IPD (for display / possible use), derived from average proportions:
+          // estimatedIPD = eyeDistPx * pxToMmScale
+          const estIPD = (eyeDistPx && pxToMmScale) ? (eyeDistPx * pxToMmScale) : null;
+          if (estIPD) {
+            // we keep pxToMmScale as the canonical scale (estimated) — user can press Auto Estimate to lock it
+            // Show ephemeral info in badge (keeps existing functionality)
+            accuracyBadge.textContent = `Status: Estimated (${Math.round(estIPD)} mm IPD)`;
+          }
+        }
+
+        // Draw overlay
+        drawGlasses(landmarks);
+
+        // Update size display with current values (prefers calibrated pxToMmScale)
+        updateFrameSizeDisplay(faceWidthPx, lastEyeDistPx);
+        return;
+      }
+
+      // default draw if we haven't returned earlier
+      drawGlasses(landmarks);
+    }
+
+    faceMesh.onResults(onResults);
+
+    // start camera (unchanged)
+    function startCamera() {
+      navigator.mediaDevices.getUserMedia({ video:true })
+        .then(stream => {
+          video.srcObject = stream;
+          video.onloadedmetadata = () => {
+            resizeCanvas();
+            const camera = new Camera(video, {
+              onFrame: async () => await faceMesh.send({ image: video }),
+              width: 1280, height: 720
+            });
+            camera.start();
+          };
+        })
+        .catch(() => { if (notice) notice.textContent = '❌ Camera permission denied!'; });
+    }
+    startCamera();
+
+    window.addEventListener('resize', () => { try { resizeCanvas(); } catch(e) {} });
+
+    // ---------------- Mask & tint builder (unchanged) ----------------
+    function buildFrameMask() {
+      const w = glassesImage.naturalWidth, h = glassesImage.naturalHeight;
+      if (!w || !h) return;
+      const src = document.createElement('canvas'); src.width = w; src.height = h;
+      const sctx = src.getContext('2d'); sctx.drawImage(glassesImage,0,0,w,h);
+      const img = sctx.getImageData(0,0,w,h); const d = img.data;
+
+      for (let i=0;i<d.length;i+=4) {
+        const r=d[i], g=d[i+1], b=d[i+2], a=d[i+3];
+        const luminance = 0.2126*r + 0.7152*g + 0.0722*b;
+        const max = Math.max(r,g,b), min = Math.min(r,g,b);
+        const sat = max===0 ? 0 : (max-min)/max;
+        const isFrame = a>60 && (luminance < 200 || sat > 0.18);
+        d[i]=255; d[i+1]=255; d[i+2]=255; d[i+3]= isFrame ? 255 : 0;
+      }
+      sctx.putImageData(img,0,0);
+      frameMaskCanvas = src;
+    }
+
+    async function rebuildTintedFrame() {
+      if (!selectedColorRaw || !frameMaskCanvas) { tintedFrameImg = null; return; }
+      const w = frameMaskCanvas.width, h = frameMaskCanvas.height;
+      const tintCanvas = document.createElement('canvas'); tintCanvas.width = w; tintCanvas.height = h;
+      const tctx = tintCanvas.getContext('2d');
+
+      const colorToUse = selectedColorRaw;
+      if (!/^rgba/i.test(colorToUse) && !/^hsla/i.test(colorToUse)) {
+        tctx.globalAlpha = 0.85;
+        tctx.fillStyle = colorToUse;
+        tctx.fillRect(0,0,w,h);
+        tctx.globalAlpha = 1.0;
+      } else {
+        tctx.fillStyle = colorToUse;
+        tctx.fillRect(0,0,w,h);
+      }
+
+      tctx.globalCompositeOperation = 'destination-in';
+      tctx.drawImage(frameMaskCanvas, 0, 0, w, h);
+      tctx.globalCompositeOperation = 'source-over';
+
+      const img = new Image();
+      img.src = tintCanvas.toDataURL();
+      tintedFrameImg = img;
+    }
+
+    // ---------------- Color picker & products (unchanged) ----------------
+    function highlightSelectedButton(btn) {
+      document.querySelectorAll('#colorPicker .color-btn').forEach(b => b.classList.remove('selected'));
+      if (btn) btn.classList.add('selected');
+    }
+    function populatePickerFromArray(colorArray) {
+      if (pickerInitialized) { /* rebuild UI only */ }
+      colorPickerEl.innerHTML = '';
+      if (Array.isArray(colorArray) && colorArray.length > 0) {
+        colorArray.forEach((c, idx) => {
+          const btn = document.createElement('div');
+          btn.className = 'color-btn';
+          btn.dataset.color = c;
+          btn.title = c;
+          try { btn.style.background = c; } catch(e) { btn.style.background = '#ccc'; }
+
+          btn.addEventListener('click', async () => {
+            selectedColorRaw = (c === 'none') ? null : c;
+            await rebuildTintedFrame();
+            highlightSelectedButton(btn);
+          });
+
+          colorPickerEl.appendChild(btn);
+
+          if (!pickerInitialized && idx === 0 && !initialColorParam) {
+            selectedColorRaw = c;
+            setTimeout(() => { highlightSelectedButton(btn); rebuildTintedFrame(); }, 10);
+          }
+        });
+      }
+      const clearBtn = document.createElement('div');
+      clearBtn.className = 'color-btn clear';
+      clearBtn.dataset.color = 'none';
+      clearBtn.title = 'Original (No Tint)';
+      clearBtn.textContent = '×';
+      clearBtn.addEventListener('click', () => {
+        selectedColorRaw = null;
+        rebuildTintedFrame();
+        highlightSelectedButton(clearBtn);
+      });
+      colorPickerEl.appendChild(clearBtn);
+      pickerInitialized = true;
+    }
+
+    async function loadProductAndColors() {
+      if (!productId) return false;
+      try {
+        const docRef = doc(db, 'products', productId);
+        const snap = await getDoc(docRef);
+        if (!snap.exists()) return false;
+
+        const product = snap.data();
+        baseGlassesImageUrl = imageUrlParam || product.imageUrl || baseGlassesImageUrl;
+        glassesImage.src = baseGlassesImageUrl;
+        const colors = Array.isArray(product.colors) ? product.colors : [];
+        populatePickerFromArray(colors);
+
+        if (initialColorParam) {
+          const nodes = Array.from(document.querySelectorAll('#colorPicker .color-btn'));
+          let matched = nodes.find(n => (n.dataset.color || '').toLowerCase() === initialColorParam.toLowerCase());
+          if (matched) matched.click();
+          else {
+            const extra = document.createElement('div');
+            extra.className='color-btn';
+            extra.dataset.color = initialColorParam;
+            try { extra.style.background = initialColorParam; } catch(e){ extra.style.background = '#ccc'; }
+            extra.title = initialColorParam;
+            extra.addEventListener('click', async () => { selectedColorRaw = initialColorParam; await rebuildTintedFrame(); highlightSelectedButton(extra); });
+            colorPickerEl.insertBefore(extra, colorPickerEl.firstChild);
+            extra.click();
+          }
+        }
+
+        if (product.category) {
+          loadRelatedProducts(product.category, productId);
+        } else {
+          console.warn('No category on product; related products won’t load.');
+        }
+
+        glassesImage.src = baseGlassesImageUrl;
+        return true;
+      } catch (err) {
+        console.error('Error reading product from Firestore:', err);
+        return false;
+      }
+    }
+
+    function loadColorsFromUrlParam() {
+      if (!colorsParam) return false;
+      const arr = colorsParam.split(',').map(s => s.trim()).filter(Boolean);
+      if (arr.length===0) return false;
+      populatePickerFromArray(arr);
+      if (initialColorParam) {
+        const nodes = Array.from(document.querySelectorAll('#colorPicker .color-btn'));
+        let matched = nodes.find(n => (n.dataset.color || '').toLowerCase() === initialColorParam.toLowerCase());
+        if (matched) matched.click();
+      }
+      return true;
+    }
+
+    async function initColorPickerAndRelated() {
+      const loadedFromProduct = await loadProductAndColors();
+      if (!loadedFromProduct) {
+        if (!glassesImage.src) { glassesImage.src = baseGlassesImageUrl; }
+        const loadedFromParam = loadColorsFromUrlParam();
+        if (!loadedFromParam) {
+          populatePickerFromArray(['#000000','#7b3b2e','#e53935','#1e88e5','#2e7d32','#d4af37']);
+          if (initialColorParam) {
+            const nodes = Array.from(document.querySelectorAll('#colorPicker .color-btn'));
+            const matched = nodes.find(n => (n.dataset.color||'').toLowerCase() === initialColorParam.toLowerCase());
+            if (matched) matched.click();
+            else {
+              const extra = document.createElement('div');
+              extra.className='color-btn';
+              extra.dataset.color = initialColorParam;
+              try { extra.style.background = initialColorParam; } catch(e){ extra.style.background = '#ccc'; }
+              extra.title = initialColorParam;
+              extra.addEventListener('click', async ()=> { selectedColorRaw = initialColorParam; await rebuildTintedFrame(); highlightSelectedButton(extra); });
+              colorPickerEl.insertBefore(extra, colorPickerEl.firstChild);
+              extra.click();
+            }
+          }
+        }
+
+        if (categoryParam) {
+          loadRelatedProducts(categoryParam, null);
+        } else {
+          console.warn('No productId and no category param; related products cannot be loaded.');
+        }
+      }
+    }
+
+   // Related products loader (unchanged)
+async function loadRelatedProducts(category, currentProductId) {
+  console.log("🔍 Querying related products for category:", category);
+  try {
+    const qy = query(collection(db, "products"), where("category", "==", category));
+    const snap = await getDocs(qy);
+    const relatedContainer = document.getElementById("related-products");
+    let products = [];
+    snap.forEach((docSnap) => {
+      const data = docSnap.data();
+      if (docSnap.id !== currentProductId) products.push({ id: docSnap.id, ...data });
+    });
+    if (products.length === 0) {
+      relatedContainer.innerHTML = `<div class="text-center text-gray-500 w-full">No related products found for category: ${category}</div>`;
+      return;
+    }
+    relatedContainer.innerHTML = "";
+    products.forEach((product) => {
+      relatedContainer.innerHTML += `
+      <div class="related-card min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-transform duration-300 hover:-translate-y-1 p-6 flex flex-col items-center">
+        <img src="${product.imageUrl}" alt="${product.name}" class="h-44 object-contain related-switch cursor-pointer transition-transform duration-300 hover:scale-105" data-id="${product.id}" data-image="${product.imageUrl}">
+        <h3 class="text-lg font-semibold text-gray-800 text-center mt-4 line-clamp-2">${product.name}</h3>
+        <p class="text-lg font-medium text-gray-600 text-center mt-2">Rs. ${product.price}</p>
+        <a href="/FYP-2024/website/Shop/product-view.html?id=${product.id}" class="mt-5 w-full text-center bg-black text-white py-2.5 rounded-lg text-sm font-medium shadow hover:bg-gray-800 transition">View Product</a>
+      </div>`;
+    });
+
+    // switch on related image click (unchanged)
+    document.querySelectorAll(".related-switch").forEach((img) => {
+      img.addEventListener("click", async () => {
+        const newImage = img.dataset.image;
+        const newProductId = img.dataset.id;
+        if (newImage) { glassesImage.src = newImage; baseGlassesImageUrl = newImage; }
+        try {
+          const docRef = doc(db, "products", newProductId);
+          const snap = await getDoc(docRef);
+          if (snap.exists()) {
+            const product = snap.data();
+            const colors = Array.isArray(product.colors) ? product.colors : [];
+            if (colors.length > 0) populatePickerFromArray(colors);
+            else populatePickerFromArray(["#000000","#7b3b2e","#e53935","#1e88e5","#2e7d32","#d4af37"]);
+          }
+        } catch (err) { console.error("❌ Failed to load colors for related product:", err); }
+      });
+    });
+
+  } catch (err) { console.error("Error loading related products:", err); }
+} // end related loader
+
+    // ---------------- Capture & modal (unchanged) ----------------
+    const flash = document.getElementById('flashEffect');
+    const modal = document.getElementById('previewModal');
+    const capturedImageEl = document.getElementById('capturedImage');
+
+    document.getElementById('captureBtn').addEventListener('click', () => {
+      flash.style.opacity = '1';
+      setTimeout(()=> { flash.style.opacity = '0'; }, 180);
+      const snapshot = canvas.toDataURL('image/png');
+      capturedImageEl.src = snapshot;
+      modal.style.display = 'flex';
+    });
+
+    document.getElementById('closeModal').addEventListener('click', ()=> modal.style.display='none');
+
+    document.getElementById('downloadBtn').addEventListener('click', ()=> {
+      const a = document.createElement('a');
+      a.href = capturedImageEl.src;
+      a.download = 'tryon_glasses.png';
+      a.click();
+    });
+
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      if (!navigator.share) { alert('Sharing not supported in this browser. Please download and share manually.'); return; }
+      try {
+        const blob = await (await fetch(capturedImageEl.src)).blob();
+        const file = new File([blob], 'tryon_glasses.png', { type:'image/png' });
+        await navigator.share({ title:'My Try-On', text:'Look at this!', files:[file] });
+      } catch (err) { console.error(err); alert('Share failed.'); }
+    });
+
+    // Finalize logic (modified to prefer pxToMmScale if available)
+    document.getElementById("finalizeBtn").addEventListener("click", () => {
+      // require that we're at good distance and stable
+      if (!distanceOK) { alert("Please move to the green zone for accurate measurement."); return; }
+      if (stableCounter < REQUIRED_STABLE_FRAMES) { alert("Hold still for a moment to stabilize."); return; }
+
+      // pick scale
+      let scale = pxToMmScale;
+      if (!scale) {
+        // fallback compute from lastTemplePx
+        if (lastTemplePx && lastTemplePx > 0) scale = computeScaleFromTemple(lastTemplePx);
+        else {
+          alert("Measurement not ready yet.");
+          return;
+        }
+      }
+
+      const glassesWidthPx = manualMode ? manualWidth : prevWidth;
+      finalizedSize = Math.round(glassesWidthPx * scale);
+      frameSizeEl.textContent = `Final Frame Size: ${finalizedSize} mm ✅`;
+      alert(`Finalized frame width: ${finalizedSize} mm`);
+    });
+
+    // Auto-Estimate button: locks the estimated pxToMmScale (uses temple assumption)
+    document.getElementById("autoEstimateBtn").addEventListener("click", () => {
+      if (!distanceOK) { alert("Please move to the green zone first."); return; }
+      if (stableCounter < REQUIRED_STABLE_FRAMES) { alert("Please hold still a moment."); return; }
+      if (!lastTemplePx || lastTemplePx <= 0) { alert("Face not detected clearly."); return; }
+
+      pxToMmScale = computeScaleFromTemple(lastTemplePx);
+      // compute an estimated IPD in mm for user feedback
+      const estIPD = lastEyeDistPx ? Math.round(lastEyeDistPx * pxToMmScale) : null;
+      accuracyBadge.textContent = estIPD ? `Status: Auto-estimated (${estIPD} mm IPD)` : `Status: Auto-estimated`;
+      alert("Auto-estimate complete. You can now finalize the size.");
+    });
+
+    // ------- Initialize everything -------
+    await initColorPickerAndRelated();
+    if (!glassesImage.src) { glassesImage.src = baseGlassesImageUrl; }
+    console.log('initialized — productId:', productId, ', imgParam:', imageUrlParam, ', initialColor:', initialColorParam, ', categoryParam:', categoryParam);
+  </script>
+</body>
+</html>

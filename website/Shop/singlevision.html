@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Select Single Vision Type</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" src="./firebase-init.js"></script>
+
+</head>
+<body class="bg-white text-gray-800 text-xl p-10">
+
+<!-- Main Grid -->
+<div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10">
+  
+ <!-- LEFT: Product Info -->
+<div class="bg-gray-100 border border-gray-400 p-6 rounded-xl shadow flex flex-col items-center justify-center space-y-4 md:max-w-xl w-full h-[550px]">
+
+  <p id="product-brand" class="text-xl text-gray-600 font-semibold">Brand Name</p>
+  <h2 id="product-name" class="text-3xl font-bold text-center">Product Name</h2>
+  <img id="product-image" src="" alt="Product Image" class="h-60 object-contain" />
+</div>
+
+  <!-- RIGHT: Single Vision Options -->
+  <div>
+    <h2 class="text-3xl font-bold mb-6">Select your single-vision type</h2>
+
+  <!-- Standard Lens -->
+<button onclick="selectLens('Standard', 0)" class="w-full text-left p-5 bg-gray-100 border rounded-xl hover:bg-gray-200 shadow">
+  <div class="font-bold text-xl">Standard</div>
+  <p class="text-sm mt-1">Corrects for one field of vision (near, intermediate, or distance.)</p>
+  <p class="mt-2 font-medium text-lg">Free</p>
+</button>
+
+  
+<!-- Anti-fatigue Lens -->
+<button onclick="selectLens('Anti-fatigue', 500)" class="w-full mt-4 text-left p-5 bg-gray-100 border rounded-xl hover:bg-gray-200 shadow">
+  <div class="font-bold text-xl">Anti-fatigue <span class="italic font-normal text-sm">Ideal for screens</span></div>
+  <p class="text-sm mt-1">Lenses help reduce screen strain with a small boost at the bottom.</p>
+  <p class="mt-2 font-medium text-lg">Rs 500</p>
+</button>
+</div>
+</div>
+
+<script type="module">
+  import { db } from './firebase-init.js';
+  import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+  import { setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+  // Load product info
+  const productImage = localStorage.getItem("productImage") || "default.jpg";
+  const productName = localStorage.getItem("productName") || "Product Name";
+  const productBrand = localStorage.getItem("productBrand") || "Brand Name";
+
+  // Populate product data
+  document.getElementById("product-name").textContent = productName;
+  document.getElementById("product-brand").textContent = productBrand;
+  document.getElementById("product-image").src = productImage;
+
+  // Get Firestore order ID
+  const orderId = localStorage.getItem("orderId");
+
+  // Handle lens selection
+  async function selectLens(type, price) {
+    localStorage.setItem("singleVisionType", type);
+    localStorage.setItem("singleVisionPrice", price);
+
+    if (orderId) {
+      const orderRef = doc(db, "checkout-session", orderId);
+    await setDoc(orderRef, {
+  singleVisionType: type,
+  singleVisionPrice: price
+}, { merge: true }); 
+    }
+
+    window.location.href = "lens-type.html"; // ✅ Redirect to next step
+  }
+
+  // Make the function available to inline buttons
+  window.selectLens = selectLens;
+</script>
+
+
+</body>
+</html>

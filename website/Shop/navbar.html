@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="relative">
+
+  <!-- Navbar -->
+  <nav class="bg-[#ececec] flex justify-between items-center px-6 py-3 border-b-2 border-gray-400 relative z-[60]">
+      <div class="flex items-center">
+          <!-- Hamburger Icon -->
+          <div id="menuBtn" class="cursor-pointer p-2">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/menu.png" alt="menu" class="w-6 h-6 ml-2">
+          </div>
+          <!-- Logo Image -->
+          <img src="/FYP-2024/FYP/OpticSuiteImages/Logo (2).png" class="w-15 h-7 mx-5">
+      </div>
+
+      <!-- Search bar -->
+      <form id="searchForm" action="/FYP-2024/website/Shop/search.html" method="get" class="relative w-1/2 flex items-center">
+          <input type="text" name="q" placeholder="Search..." 
+                 class="w-full px-4 py-1 pr-12 rounded-full border border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <button type="submit" class="absolute right-0 top-0 bottom-0 flex items-center bg-gray-400 border border-black px-3 rounded-r-full">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/search-interface-symbol.png" alt="Search Icon" class="w-5 h-5 text-gray-600">
+          </button>
+      </form>
+
+      <!-- Right side: Icons -->
+      <div class="hidden lg:flex items-center space-x-4">
+          <!-- Camera Icon -->
+          <div class="relative group flex flex-col items-center">
+              <a href="/FYP-2024/website/VirtualTry-on/position.html" class="w-6 h-6">
+                  <img src="/FYP-2024/FYP/OpticSuiteImages/camera.png" alt="camera" class="w-full h-full">
+              </a>
+              <span class="absolute bottom-[-15px] text-xs text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                  Visual try-on
+              </span>
+          </div>
+
+          <!-- Cart Icon -->
+          <div class="relative group flex flex-col items-center">
+              <a href="/FYP-2024/website/Shop/landing(shop)page.html" class="w-6 h-6">
+                  <img src="/FYP-2024/FYP/OpticSuiteImages/shopping-cart.png" alt="cart" class="w-full h-full">
+              </a>
+              <span class="absolute bottom-[-15px] text-xs text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Shop
+              </span>
+          </div>
+
+          <!-- User Icon -->
+          <div class="relative group flex flex-col items-center">
+              <a href="#" class="w-6 h-6">
+                  <img src="/FYP-2024/FYP/OpticSuiteImages/user.png" alt="Profile" class="w-full h-full">
+              </a>
+              <span class="absolute bottom-[-15px] text-xs text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Account
+              </span>
+          </div>
+      </div>
+  </nav>
+
+  <!-- Sidebar Drawer -->
+  <div id="sidebar" class="fixed top-0 left-0 w-60 h-full bg-white shadow-lg transform -translate-x-full transition-transform duration-300 z-[9999] overflow-y-auto">
+      <div class="p-3 flex justify-between items-center border-b">
+          <button id="closeBtn" class="focus:outline-none">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/sidedrawer logo/close.png" alt="Close" class="w-5 h-5">
+          </button>
+          <div class="flex items-center space-x-1">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/circlelogo.png" alt="Logo" class="w-10 h-6">
+              <span class="font-bold text-sm">Optic Suite</span>
+          </div>
+      </div>
+
+      <!-- Sidebar Links -->
+      <ul class="mt-2 space-y-2">
+          <li class="flex items-center px-3 py-2 space-x-2 hover:bg-gray-200">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/sidedrawer logo/home.png" class="w-5 h-5">
+              <a href="#" class="text-gray-700 text-sm">Home</a>
+          </li>
+          <li class="flex items-center px-3 py-2 space-x-2 hover:bg-gray-200">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/sidedrawer logo/sunglasses.png" class="w-5 h-5">
+              <a href="#" class="text-gray-700 text-sm">3D Try-on</a>
+          </li>
+          <li class="flex items-center px-3 py-2 space-x-2 hover:bg-gray-200">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/sidedrawer logo/add-to-cart.png" class="w-5 h-5">
+              <a href="#" class="text-gray-700 text-sm">Shop</a>
+          </li>
+          <li class="flex items-center px-3 py-2 space-x-2 hover:bg-gray-200">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/sidedrawer logo/hijab.png" class="w-5 h-5">
+              <a href="/FYP-2024/website/Shop/landing(shop)page.html" class="text-gray-700 text-sm">Hijab & Veil Friendly</a>
+          </li>
+          <li class="flex items-center px-3 py-2 space-x-2 hover:bg-gray-200">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/sidedrawer logo/girl.png" class="w-5 h-5">
+              <a href="#" class="text-gray-700 text-sm">Make-up Friendly</a>
+          </li>
+
+          <li class="px-3 pt-4 text-xs text-black uppercase">You</li>
+          <li class="flex items-center px-3 py-2 space-x-2 hover:bg-gray-200">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/sidedrawer logo/user (1).png" class="w-5 h-5">
+              <a href="#" class="text-gray-700 text-sm">Account</a>
+          </li>
+          <li class="flex items-center px-3 py-2 space-x-2 hover:bg-gray-200">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/sidedrawer logo/heart.png" class="w-5 h-5">
+              <a href="#" class="text-gray-700 text-sm">Wishlist</a>
+          </li>
+          <li class="flex items-center px-3 py-2 space-x-2 hover:bg-gray-200">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/sidedrawer logo/shopping-cart (1).png" class="w-5 h-5">
+              <a href="#" class="text-gray-700 text-sm">Cart</a>
+          </li>
+
+          <li class="px-3 pt-6 text-xs text-black uppercase border-t border-gray-400">Informational</li>
+          <li class="flex items-center px-3 py-2 space-x-2 hover:bg-gray-200">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/sidedrawer logo/interrogation-mark.png" class="w-5 h-5">
+              <a href="#" class="text-gray-700 text-sm">How It Works</a>
+          </li>
+          <li class="flex items-center px-3 py-2 space-x-2 hover:bg-gray-200">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/sidedrawer logo/trend.png" class="w-5 h-5">
+              <a href="#" class="text-gray-700 text-sm">Tips & Trends</a>
+          </li>
+          <li class="flex items-center px-3 py-2 space-x-2 hover:bg-gray-200">
+              <img src="/FYP-2024/FYP/OpticSuiteImages/sidedrawer logo/group.png" class="w-5 h-5">
+              <a href="#" class="text-gray-700 text-sm">About Us</a>
+          </li>
+      </ul>
+  </div>
+
+  <!-- Gray Overlay -->
+  <div id="overlay" class="fixed inset-0 bg-gray-500 bg-opacity-50 hidden z-[9998]"></div>
+
+  <!-- JS -->
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    // Open Sidebar
+    menuBtn.addEventListener('click', () => {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        overlay.classList.remove('hidden'); 
+    });
+
+    // Close Sidebar
+    function closeSidebar() {
+        sidebar.classList.remove('translate-x-0');
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden'); 
+    }
+
+    closeBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+  </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpticSuit-Signup Page</title>
+    <link rel="stylesheet" href="output.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="google.js" defer type="module"></script>
+    <script src="email.js" defer type="module"></script>
+    <script src="facebook.js"  type="module" defer></script>
+    <style>
+        body {
+            height: 100vh;
+        }
+        /*Image bounce animation*/
+        @keyframes bounceUpDown {
+  0%, 100% {
+    transform: translateY(0); /* Start and end at the original position */
+  }
+  50% {
+    transform: translateY(-10px); /* Move up by 10px */
+  }
+}
+
+.animate-bounce-up-down {
+  animation: bounceUpDown 1.5s infinite; /* 2 seconds duration, repeats infinitely */
+}
+
+    </style>
+</head>
+<body class="bg-white">
+    <div class="flex px-16">
+        <!-- Left Section -->
+        <div class="w-1/2 flex flex-col justify-center px-12">
+            <h1 class="text-4xl font-bold mb-6 mt-8">Create Your Account</h1>
+            <form>
+                <div class="mb-6 ml-4 relative">
+                    <!-- Icon -->
+                    <img src="/FYP-2024/FYP/OpticSuiteImages/mail.png" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6">
+                    <!-- Input Field -->
+                    <input type="email" placeholder="Email Address"  id="email"
+                        class="w-80 px-4 py-3 pl-12 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                
+                <div class="mb-6 ml-4 relative">
+    
+                    <img src="/FYP-2024/FYP/OpticSuiteImages/pass.png" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6">
+                    <input type="password"  placeholder="Password" id="password"
+                    class="w-80 px-4 py-3 pl-12 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-6 ml-4 relative">
+    
+                    <img src="/FYP-2024/FYP/OpticSuiteImages/pass.png" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6">
+                    <input type="password"  placeholder=" Confirm Password" id="confirmpassword"
+                    class="w-80 px-4 py-3 pl-12 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <a href="" class="block w-80 ml-4">
+                        <button type="button" id="submit" class="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800">
+                            Sign up
+                        </button>
+                    </a>
+                </div>
+                 </form>
+            <p class="text-gray-600 px-10 ml-4 mt-4">Already have an account? <a href="SignInPage.html" class="text-black hover:text-blue-500">Login</a></p>
+            <div class="flex items-center ml-4 my-6 ">
+                <span class="bg-gray-300 h-px w-32"></span>
+                <span class="text-gray-500 mx-4">OR</span>
+                <span class="bg-gray-300 h-px w-32"></span>
+            </div>
+            <div class="flex flex-col gap-4 ml-4">
+                <button id="google-login-btn" class="w-80 flex items-center justify-center bg-black text-white border border-gray-300 py-3 rounded-md hover:bg-gray-800">
+                    <img src="https://img.icons8.com/color/24/google-logo.png" alt="Google" class="h-6 w-6 mr-3">
+                    Sign in with Google
+                </button>
+                
+            <!--  <button id="facebook-login-btn" class="w-80 flex items-center justify-center  bg-black text-white border border-gray-300 py-3 rounded-md hover:bg-gray-800">
+                    <img src="/FYP-2024/FYP/OpticSuiteImages/meta.png" alt="Meta" class="h-6 w-6 mr-3">
+                    Sign up with Meta
+                </button>-->
+            </div>
+        </div>
+
+<!--Right Section of Image-->
+<div class="w-1/2 flex flex-col bg-white items-center justify-center px-12">
+    <p class="text-5xl text-black font-bold text-center mt-2 mb-6">Welcome...</p>
+    <p class="text-gray-600 text-3xl text-center mx-3 " >Register yourself - it's quick <br> and free!</p>
+    <img src="/FYP-2024/FYP/OpticSuiteImages/sunglasses 1.png" alt="Eyeglasses" class="max-h-80 animate-bounce-up-down">
+
+    <button class="w-40 bg-white border border-black py-3 rounded-md"><a href="SignInPage.html">Sign in</a></button>
+</div>
+</div>
+
+</body>
+</html>

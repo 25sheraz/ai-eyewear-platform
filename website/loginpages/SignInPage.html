@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpticSuit-Signin Page</title>
+    <link rel="stylesheet" href="output.css">
+  
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="google.js" defer type="module"></script>
+    <script src="login.js" defer type="module"></script>
+  <style>
+     /*Image bounce animation*/
+     @keyframes bounceUpDown {
+  0%, 100% {
+    transform: translateY(0); /* Start and end at the original position */
+  }
+  50% {
+    transform: translateY(-10px); /* Move up by 10px */
+  }
+}
+
+.animate-bounce-up-down {
+  animation: bounceUpDown 1.5s infinite; /* 2 seconds duration, repeats infinitely */
+}
+
+  </style>
+</head>
+
+
+<body class="bg-white">
+    <!-- Left Section -->
+<div class="flex px-12">
+    <div class="w-1/2 flex flex-col bg-white items-center justify-center px-12 mt-2">
+        <p class="text-4xl text-black font-bold text-center mt-4 mb-2">Good to see you again...</p>
+        <p class="text-gray-600 text-3xl text-center mx-3 my-4 " >Fill in your details to continue! </p>
+        <img src="/FYP-2024/FYP/OpticSuiteImages/sunglasses 2.jpg" atl="Eyeglasees" class="max-h-80 animate-bounce-up-down">
+        <button class="w-40 bg-white border border-black py-3 rounded-md"><a href="index.html">Sign up</a></button>
+        </div>
+    <!--Right Section -->
+    <div class="w-1/2 flex flex-col justify-center px-16">
+        <h1 class="text-4xl font-bold mb-6 mt-8 px-8">Welcome Back</h1>
+        <form>
+    
+            <div class="mb-6 ml-4 relative">
+    
+                <img src="/FYP-2024/FYP/OpticSuiteImages/mail.png" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6">
+                <input type="email"  placeholder="Email"  id="email"
+                class="w-80 px-4 py-3 pl-12 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div class="mb-6 ml-4 relative">
+    
+                <img src="/FYP-2024/FYP/OpticSuiteImages/pass.png" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6">
+                <input type="password"  placeholder="  Password"  id="password"
+                class="w-80 px-4 py-3 pl-12 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            
+            </div>
+            <p class="ml-5 mb-2"><a href="/FYP-2024/website/ResetPassword/resetpass1.html">Forgot password?</a></p>
+            <a id="submit"
+            class="w-80 ml-4 bg-black text-white py-3 rounded-md hover:bg-gray-800 text-center block">
+            Sign in
+        </a>
+       
+            
+        <p class="text-gray-600 px-10 ml-4 mt-4">Don't have an account? <a href="index.html" class="text-black hover:text-blue-500">Sign up</a></p>
+        <div class="flex items-center ml-4 my-6 ">
+            <span class="bg-gray-300 h-px w-32"></span>
+            <span class="text-gray-500 mx-4">OR</span>
+            <span class="bg-gray-300 h-px w-32"></span>
+        </div>
+        <div class="flex flex-col gap-4 ml-4">
+            <button id="google-login-btn" class="w-80 flex items-center justify-center bg-black text-white border border-gray-300 py-3 rounded-md hover:bg-gray-800">
+                <img src="https://img.icons8.com/color/24/google-logo.png" alt="Google" class="h-6 w-6 mr-3">
+                Sign in with Google
+            </button>
+            <!--<button id="facebook-login-btn" class="w-80 flex items-center justify-center  bg-black text-white border border-gray-300 py-3 rounded-md hover:bg-gray-800">
+                <img src="/FYP-2024/FYP/OpticSuiteImages/meta.png" alt="Meta" class="h-6 w-6 mr-3">
+                Sign up with Meta
+            </button>-->
+        </div>
+    </div>
+
+
+
+</div>
+<script>
+       if (!app) {
+       console.error("Firebase app not initialized.");
+     } else {
+       console.log("Firebase app initialized successfully:", app);
+     }
+     
+</script>
+</body>
+</html>

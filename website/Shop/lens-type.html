@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Select Lens Type</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+   <script type="module" src="./firebase-init.js"></script>
+</head>
+<body class="bg-white text-gray-800 text-xl p-10">
+
+<div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10">
+  
+<!-- LEFT: Product Info -->
+<div class="bg-gray-100 border border-gray-400 p-6 rounded-xl shadow flex flex-col items-center justify-center space-y-4 md:max-w-xl w-full h-[550px]">
+
+  <p id="product-brand" class="text-xl text-gray-600 font-semibold">Brand Name</p>
+  <h2 id="product-name" class="text-3xl font-bold text-center">Product Name</h2>
+  <img id="product-image" src="" alt="Product Image" class="h-60 object-contain" />
+</div>
+  <!-- RIGHT: Lens Type Options -->
+  <div>
+    <h2 class="text-3xl font-bold mb-6">Select your lens type</h2>
+
+    <!-- Classic -->
+    <button onclick="selectLensType('Classic', 0)" class="w-full text-left p-5 bg-gray-100 border rounded-xl hover:bg-gray-200 shadow mb-4">
+      <div class="font-bold text-xl">Classic</div>
+      <p class="text-sm mt-1 text-gray-700">Clear lenses with no additional enhancements.</p>
+      <p class="mt-2 font-medium text-lg">Free</p>
+    </button>
+
+    <!-- Blue-light Filter -->
+    <button onclick="selectLensType('Blue-light Filter', 500)" class="w-full text-left p-5 bg-gray-100 border rounded-xl hover:bg-gray-200 shadow mb-4">
+      <div class="font-bold text-xl">Blue-light Filter</div>
+      <p class="text-sm mt-1 text-gray-700">Helps reduce digital eye strain from screens and devices.</p>
+      <p class="mt-2 font-medium text-lg">Rs 500</p>
+    </button>
+
+    <!-- Light-responsive -->
+    <button onclick="selectLensType('Light-responsive', 1000)" class="w-full text-left p-5 bg-gray-100 border rounded-xl hover:bg-gray-200 shadow">
+      <div class="font-bold text-xl">Light-responsive</div>
+      <p class="text-sm mt-1 text-gray-700">Darkens in sunlight and stays clear indoors, offering UV protection.</p>
+      <p class="mt-2 font-medium text-lg">Rs 1000</p>
+    </button>
+  </div>
+</div>
+
+<script type="module">
+  import { db } from './firebase-init.js';
+ import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+
+  // Load product info
+  const productImage = localStorage.getItem("productImage") || "default.jpg";
+  const productName = localStorage.getItem("productName") || "Product Name";
+  const productBrand = localStorage.getItem("productBrand") || "Brand Name";
+
+  document.getElementById("product-name").textContent = productName;
+  document.getElementById("product-brand").textContent = productBrand;
+  document.getElementById("product-image").src = productImage;
+
+  // Get Firestore order ID
+  const orderId = localStorage.getItem("orderId");
+
+  async function selectLensType(type, price) {
+    localStorage.setItem("lensType", type);
+    localStorage.setItem("lensPrice", price);
+
+    // ✅ Update Firestore
+    if (orderId) {
+      const orderRef = doc(db, "checkout-session", orderId);
+     await setDoc(orderRef, {
+  lensType: type,
+  lensPrice: price
+}, { merge: true });
+
+    }
+
+    window.location.href = "cleaningkit.html"; // go to next step
+  }
+
+  // Make function accessible from inline onclick
+  window.selectLensType = selectLensType;
+</script>
+
+
+
+</body>
+</html>

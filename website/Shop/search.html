@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Results</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+    // ✅ Firebase config
+    const firebaseConfig = {
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+      projectId: "YOUR_FIREBASE_PROJECT_ID",
+      storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+      appId: "YOUR_FIREBASE_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // URL se query
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get("q")?.toLowerCase() || "";
+
+    // ✅ synonyms mapping
+    const synonyms = {
+      man: ["men", "male", "boy", "guy"],
+      men: ["man", "male", "boy", "guy"],
+      woman: ["women", "girl", "female", "lady"],
+      women: ["woman", "girl", "female", "lady"],
+      kids: ["child", "children", "boys", "girls"],
+      stylish: ["fashion", "trendy", "modern"],
+      rayban: ["ray-ban", "ray ban"],
+      specs: ["glasses", "eyewear", "spectacles"]
+    };
+
+    function expandQuery(q) {
+      let words = [q];
+      Object.keys(synonyms).forEach(key => {
+        if (q.includes(key)) {
+          words = words.concat(synonyms[key]);
+        }
+      });
+      return words;
+    }
+
+    async function searchProducts() {
+      const snapshot = await getDocs(collection(db, "products"));
+      let results = [];
+
+      const searchWords = expandQuery(query);
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+
+        const searchableText = `
+          ${data.name || ""}
+          ${data.category || ""}
+          ${data.brand || ""}
+          ${data.description || ""}
+          ${data.type || ""}
+          ${data.gender || ""}
+          ${data.price || ""}
+        `.toLowerCase();
+
+        if (searchWords.some(word => searchableText.includes(word))) {
+          results.push({ id: doc.id, ...data });
+        }
+      });
+
+      showResults(results);
+    }
+
+    function showResults(products) {
+      const container = document.getElementById("results");
+      container.innerHTML = "";
+
+      if (products.length === 0) {
+        container.innerHTML = `<p class="text-gray-600 text-center">No results found for "<b>${query}</b>"</p>`;
+        return;
+      }
+
+      products.forEach(p => {
+        container.innerHTML += `
+          <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-1 p-4 flex flex-col">
+            <!-- Product Image -->
+            <div class="relative flex items-center justify-center bg-gray-50 rounded-lg h-48">
+              <img src="${p.imageUrl || '/FYP-2024/FYP/OpticSuiteImages/no-image.png'}" 
+                   alt="${p.name}" 
+                   class="max-h-40 object-contain">
+              <span class="absolute top-2 left-2 bg-blue-100 text-blue-600 text-xs font-semibold px-2 py-1 rounded-full">
+                ${p.category || "N/A"}
+              </span>
+            </div>
+
+            <!-- Product Info -->
+            <div class="mt-3 flex flex-col flex-grow">
+              <h3 class="font-semibold text-base text-gray-800 mb-1 line-clamp-2">${p.name || "Unnamed Product"}</h3>
+              <p class="text-xs text-gray-500 mb-1">Brand: <span class="font-medium text-gray-700">${p.brand || "N/A"}</span></p>
+              <p class="text-gray-900 font-bold mb-3 text-sm">PKR ${p.price?.toLocaleString() || "N/A"}</p>
+
+              <!-- View Button -->
+              <a href="/FYP-2024/website/Shop/product-view.html?id=${p.id}" target="_blank"
+                 class="mt-auto inline-block text-center px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs rounded-md hover:from-blue-600 hover:to-indigo-700 transition">
+                View Product
+              </a>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    searchProducts();
+  </script>
+</head>
+<body class="bg-gray-100 min-h-screen p-10">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="text-3xl font-extrabold mb-10 text-gray-800 text-center">🔍 Search Results</h2>
+    <div id="results" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+  </div>
+</body>
+</html>

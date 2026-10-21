@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Summary - Admin</title>
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.bootstrap5.min.css">
+
+<style>
+  body { background-color: #f4f6f9; font-family: 'Inter', sans-serif; color: #212529; }
+  h2 { text-align: center; margin-bottom: 30px; font-weight: 700; font-size: 1.9rem; color: #111827; }
+  
+  .table-container {
+    background: #fff; 
+    padding: 25px; 
+    border-radius: 16px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+    margin-bottom: 40px;
+  }
+
+  table img { border-radius: 8px; max-width: 60px; }
+  th, td { font-size: 0.85rem; text-align: center; vertical-align: middle; }
+  thead th { background-color: #111827 !important; color: #fff !important; letter-spacing: 0.5px; }
+  tbody tr { transition: all 0.2s; }
+  tbody tr:hover { background-color: rgba(17,24,39,0.05); }
+
+  .btn-delete { 
+    background-color: #ef4444; 
+    color: #fff; 
+    border: none; 
+    padding: 6px 12px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    transition: 0.3s;
+    font-size: 0.85rem;
+  }
+  .btn-delete:hover { background-color: #dc2626; }
+
+  .btn-back { 
+    background-color: #111827; 
+    color: #fff; 
+    margin-bottom: 25px; 
+    padding: 10px 18px; 
+    border-radius: 10px; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-weight: 500; 
+    transition: 0.3s;
+  }
+  .btn-back:hover { background-color: #1f2937; }
+
+  .status-select { 
+    padding: 4px 10px; 
+    border-radius: 8px; 
+    border: 1px solid #d1d5db; 
+    transition: 0.2s; 
+    font-size: 0.85rem;
+    background-color: #f9fafb;
+  }
+  .status-select:focus { outline: none; border-color: #6b7280; box-shadow: 0 0 0 0.2rem rgba(17,24,39,0.2); }
+
+  .dataTables_wrapper .dataTables_filter input { width: 280px; display: inline-block; margin-left: 0.5em; border-radius: 8px; padding: 6px 10px; border: 1px solid #d1d5db; }
+
+  @media (max-width: 768px){
+    h2 { font-size: 1.6rem; }
+    .btn-back { padding: 8px 14px; font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <a href="/FYP-2024/website/Shop/admindashboard.html" class="btn-back">← Back to Dashboard</a>
+  <h2>🛒 Order Summary (Admin)</h2>
+  
+  <div class="table-container table-responsive">
+    <table id="ordersTable" class="table table-bordered table-striped table-hover nowrap" style="width:100%">
+      <thead class="text-center">
+        <tr>
+          <th>#</th>
+          <th>Order ID</th>
+          <th>Product</th>
+          <th>Brand</th>
+          <th>Image</th>
+          <th>Color</th>
+          <th>Size</th>
+          <th>Price</th>
+          <th>Prescription</th>
+          <th>Prescription Price</th>
+          <th>Single Vision</th>
+          <th>Single Vision Price</th>
+          <th>Lens</th>
+          <th>Lens Price</th>
+          <th>Cleaning Kit</th>
+          <th>Cleaning Kit Price</th>
+          <th>Total</th>
+          <th>User</th>
+          <th>Customer Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>City</th>
+          <th>Address</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="orders-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Firebase Scripts -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+<!-- jQuery & DataTables Scripts -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "YOUR_FIREBASE_API_KEY",
+    authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+    projectId: "YOUR_FIREBASE_PROJECT_ID",
+    storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+    appId: "YOUR_FIREBASE_APP_ID"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  const ordersTableBody = document.getElementById("orders-table");
+
+  db.collection("orders")
+    .orderBy("orderDate", "desc")
+    .onSnapshot(snapshot => {
+      ordersTableBody.innerHTML = "";
+      let serial = 1;
+
+      if (snapshot.empty) {
+        ordersTableBody.innerHTML = `<tr><td colspan="26" class="text-center text-muted">No orders found</td></tr>`;
+        return;
+      }
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const orderId = doc.id;
+        let orderDate = data.orderDate?.toDate ? data.orderDate.toDate().toLocaleString() : "-";
+        const status = data.status || "pending";
+
+        const row = `
+          <tr data-id="${orderId}">
+            <td>${serial++}</td>
+            <td>${orderId}</td>
+            <td>${data.productName || "-"}</td>
+            <td>${data.productBrand || "-"}</td>
+            <td><img src="${data.productImage || ''}" alt="Product"></td>
+            <td>${data.color || "-"}</td>
+            <td>${data.size || "-"}</td>
+            <td>Rs ${data.productPrice || 0}</td>
+            <td>${data.prescriptionType || "-"}</td>
+            <td>Rs ${data.prescriptionPrice || 0}</td>
+            <td>${data.singleVisionType || "-"}</td>
+            <td>Rs ${data.singleVisionPrice || 0}</td>
+            <td>${data.lensType || "-"}</td>
+            <td>Rs ${data.lensPrice || 0}</td>
+            <td>${data.cleaningKit || "No"}</td>
+            <td>Rs ${data.cleaningKitPrice || 0}</td>
+            <td>Rs ${data.totalPrice || 0}</td>
+            <td>${data.userEmail || "Guest"}</td>
+            <td>${data.customerName || "-"}</td>
+            <td>${data.customerEmail || "-"}</td>
+            <td>${data.customerPhone || "-"}</td>
+            <td>${data.customerCity || "-"}</td>
+            <td>${data.customerAddress || "-"}</td>
+            <td>${orderDate}</td>
+            <td>
+              <select class="status-select" data-id="${orderId}">
+                <option value="pending" ${status === "pending" ? "selected" : ""}>Pending</option>
+                <option value="delivered" ${status === "delivered" ? "selected" : ""}>Delivered</option>
+              </select>
+            </td>
+            <td><button class="btn-delete">Delete</button></td>
+          </tr>
+        `;
+        ordersTableBody.innerHTML += row;
+      });
+
+      const table = $('#ordersTable').DataTable({
+        destroy: true,
+        order: [[1, 'desc']], 
+        pageLength: 10,
+        lengthMenu: [5,10,20,50,100],
+        fixedHeader: true,
+        scrollX: true,
+      });
+
+      $('#ordersTable').off('click', '.btn-delete').on('click', '.btn-delete', function() {
+        const tr = $(this).closest('tr');
+        const id = tr.data('id');
+        if(confirm('Are you sure you want to delete this order?')) {
+          db.collection('orders').doc(id).delete()
+            .then(() => { table.row(tr).remove().draw(); alert('✅ Order deleted successfully'); })
+            .catch(err => { console.error(err); alert('Failed to delete order'); });
+        }
+      });
+
+      $('#ordersTable').off('change', '.status-select').on('change', '.status-select', function() {
+        const id = $(this).data('id');
+        const newStatus = $(this).val();
+        db.collection('orders').doc(id).update({ status: newStatus })
+          .then(() => { alert(`✅ Status updated to ${newStatus}`); })
+          .catch(err => { console.error(err); alert("Failed to update status"); });
+      });
+    }, err => {
+      console.error(err);
+      ordersTableBody.innerHTML = `<tr><td colspan="26" class="text-center text-danger">Error loading orders</td></tr>`;
+    });
+</script>
+</body>
+</html>

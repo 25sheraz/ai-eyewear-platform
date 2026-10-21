@@ -1,0 +1,77 @@
+<!-- Floating Button -->
+<a href="http://127.0.0.1:5000/"
+   class="fab-go-to-reco"
+   aria-label="Go to Recommendation">
+   <!-- Icon (recommendation bulb) -->
+   <svg xmlns="http://www.w3.org/2000/svg" 
+        fill="none" viewBox="0 0 24 24" 
+        stroke-width="2" stroke="currentColor" 
+        class="w-5 h-5 mr-2">
+     <path stroke-linecap="round" stroke-linejoin="round" 
+           d="M12 3c-3.866 0-7 2.91-7 6.5 0 2.485 1.5 4.675 3.75 5.65V17a1 1 0 001 1h4.5a1 1 0 001-1v-1.85C17.5 14.175 19 11.985 19 9.5 19 5.91 15.866 3 12 3z" />
+     <path stroke-linecap="round" stroke-linejoin="round" 
+           d="M9.75 21h4.5" />
+   </svg>
+   Go to Recommendation
+</a>
+
+<style>
+  .fab-go-to-reco{
+    position: fixed;
+    right: 20px;
+    bottom: 30px;
+    z-index: 9999;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 20px;
+    background: #ffffff;    /* white background */
+    color: #111827;         /* dark text */
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: 50px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    text-decoration: none;
+    transition: all .3s ease-in-out;
+    animation: floatUpDown 3s ease-in-out infinite;
+  }
+
+  /* Icon spacing */
+  .fab-go-to-reco svg {
+    flex-shrink: 0;
+  }
+
+  /* Hover effects */
+  .fab-go-to-reco:hover{
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+    background: #f9fafb;   /* light gray hover */
+  }
+
+  /* Click/active effect */
+  .fab-go-to-reco:active{
+    transform: scale(0.97);
+  }
+
+  /* Floating animation */
+  @keyframes floatUpDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  /* Large screen pe center right */
+  @media (min-height: 700px){
+    .fab-go-to-reco{
+      bottom: auto;
+      top: 50%;
+      transform: translateY(-50%);
+      animation: floatUpDown 3s ease-in-out infinite;
+    }
+    .fab-go-to-reco:hover{
+      transform: translateY(calc(-50% - 5px)) scale(1.05);
+    }
+    .fab-go-to-reco:active{
+      transform: translateY(-50%) scale(0.97);
+    }
+  }
+</style>

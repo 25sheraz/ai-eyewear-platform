@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Detail</title>
+  <script type="module" src="./product-detail.js" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+</head>
+<body class="bg-white text-gray-800 text-xl leading-relaxed">
+  <!-- Section: Product Image and Product Detail Side-by-Side -->
+  <div class="max-w-7xl mx-auto p-10 grid grid-cols-1 md:grid-cols-2 gap-10">
+    <!-- 📸 Product Image -->
+    <div class="flex flex-col items-center justify-center border border-black rounded-2xl shadow bg-white h-[500px] relative">
+      <img id="main-image" src="" alt="Product Image" class="max-h-[480px] max-w-full object-contain" />
+
+      <!-- Buttons Container -->
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-4">
+        <a id="tryon-button"
+           href="#"
+           target="_blank"
+           class="flex items-center justify-center gap-3 border border-black px-8 py-3 rounded-2xl bg-white shadow hover:bg-gray-100 transition min-w-[180px]">
+          <img src="/FYP-2024/FYP/OpticSuiteImages/women collection/Icons/camera icon.png"
+               alt="Try-on"
+               class="w-6 h-6" />
+          <span class="text-lg font-medium">Try-on</span>
+        </a>
+
+        <a id="show-3d-button"
+           href="javascript:void(0)"
+           class="flex items-center justify-center gap-3 border border-black px-8 py-3 rounded-2xl bg-white shadow hover:bg-gray-100 transition min-w-[180px]">
+          <i class="fas fa-cube"></i>
+          <span class="text-lg font-medium">3D Model</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 📝 Product Detail (Same grid) -->
+    <div class="space-y-6 text-xl">
+      <h1 id="product-name" class="text-5xl font-bold">Product Name</h1>
+      <p id="product-brand" class="text-2xl text-gray-500">Brand Name</p>
+      <p id="product-price" class="text-3xl font-semibold text-green-700">Rs. 0000</p>
+
+      <!-- Colors -->
+      <div>
+        <p class="font-semibold mb-1">Choose a Color</p>
+        <div class="flex gap-4 items-center" id="color-options"></div>
+        <p class="text-lg text-gray-600 mt-1" id="color-name">Black <span class="text-green-600 font-medium">In stock</span></p>
+      </div>
+
+     <!--  Sizes 
+      <div>
+        <p class="font-semibold mb-1">Size</p>
+        <div class="flex gap-4">
+          <button class="px-5 py-2 border border-black rounded-2xl size-btn">Narrow</button>
+          <button class="px-5 py-2 border border-black rounded-2xl size-btn">Medium</button>
+          <button class="px-5 py-2 border border-black rounded-2xl size-btn">Wide</button>
+        </div>
+        <p class="text-lg text-gray-600 mt-1">Adult Large <span class="underline cursor-pointer ml-2">Size Chart</span></p>
+      </div>-->
+
+      <!-- Quantity 
+      <div class="flex items-center border border-black rounded-2xl px-4 py-2 w-fit">
+        <button class="text-2xl px-3">−</button>
+        <span class="px-3 font-medium">1</span>
+        <button class="text-2xl px-3">+</button>
+      </div>-->
+
+      <!-- Buy Buttons -->
+      <div class="flex flex-col gap-3 mt-2">
+        <button 
+          onclick="goToPrescription()"
+          class="bg-black text-white px-6 py-3 rounded-2xl hover:bg-gray-900">
+          Buy With Prescription from Rs. 2000
+        </button>
+
+        <button 
+          onclick="goToCheckoutWithoutLens()"
+          class="border border-black px-6 py-3 rounded-2xl hover:bg-gray-100">
+          Buy Without Lens
+        </button>
+      </div>
+    </div>
+  </div>
+
+   <!-- Accordion Section -->
+  <div class="max-w-7xl mx-auto px-10 mt-20">
+    <div class="space-y-8 max-w-2xl">
+      <div class="border-b border-black pb-6">
+        <button class="w-full flex justify-between items-center text-left text-2xl font-semibold accordion-toggle">
+          Everything included in this price
+          <span class="text-3xl transition-transform">+</span>
+        </button>
+        <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out text-gray-700 mt-4 text-xl">
+          <p class="font-bold text-2xl mb-4">Frame Details</p>
+          <p><span class="font-semibold">Size:</span> Adult Large (133 – 140 mm / 5.2 – 5.5 in)</p>
+          <p><span class="font-semibold">Material:</span> Mixed</p>
+          <p><span class="font-semibold">Weight:</span> Lightweight (19 grams / 0.7 ounces)</p>
+          <p><span class="font-semibold">Rim:</span> No Rim</p>
+          <p><span class="font-semibold">Shape:</span> Rectangle</p>
+          <p><span class="font-semibold">Feature:</span> Spring Hinges, Universal Bridge Fit</p>
+
+          <p class="font-bold text-2xl mt-6 mb-4">Prescription Details</p>
+          <p><span class="font-semibold">PD Range:</span> 52 – 76 mm</p>
+          <p><span class="font-semibold">Prescription Range:</span> -6.00 ~ +2.00</p>
+          <p><span class="font-semibold">Available as Progressive / Bifocal:</span> No</p>
+          <p><span class="font-semibold">Available as Readers:</span> No</p>
+
+          <p class="font-bold text-2xl mt-6 mb-4">Frame Measurements</p>
+          <p><span class="font-semibold">Frame Width:</span> 134 mm / 5.3 in</p>
+          <p><span class="font-semibold">Bridge:</span> 17 mm / 0.7 in</p>
+          <p><span class="font-semibold">Lens Width:</span> 56 mm / 2.2 in</p>
+          <p><span class="font-semibold">Lens Height:</span> 45 mm / 1.8 in</p>
+          <p><span class="font-semibold">Temple Length:</span> 140 mm / 5.5 in</p>
+        </div>
+      </div>
+
+      <div class="border-b border-black pb-6">
+        <button class="w-full flex justify-between items-center text-left text-2xl font-semibold accordion-toggle">
+          Materials
+          <span class="text-3xl transition-transform">+</span>
+        </button>
+        <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out text-gray-700 mt-4 text-xl">
+          Made from hand-polished cellulose acetate
+        </div>
+      </div>
+
+      <div class="border-b border-black pb-6">
+        <button class="w-full flex justify-between items-center text-left text-2xl font-semibold accordion-toggle">
+          Need a prescription?
+          <span class="text-3xl transition-transform">+</span>
+        </button>
+        <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out text-gray-700 mt-4 text-xl">
+          <p class="font-bold text-2xl mb-4">Book an in-person eye exam</p>
+          <p class="mb-4">
+            Meet with an eye doctor at one of our stores for a new prescription and eye health check.
+          </p>
+          <button class="bg-black text-white px-6 py-2 rounded-2xl border border-black hover:bg-gray-900 mb-6">
+            Schedule an exam
+          </button>
+
+          <hr class="border-black my-6">
+
+          <p class="font-bold text-2xl mb-4">Renew your prescription</p>
+          <p class="mb-4">
+            If your vision hasn't changed, use Virtual Vision Test on your phone to renew your prescription from home.
+          </p>
+          <button class="bg-black text-white px-6 py-2 rounded-2xl border border-black hover:bg-gray-900">
+            Renew your prescription
+          </button>
+        </div>
+      </div>
+
+      <div class="border-b border-black pb-6">
+        <button class="w-full flex justify-between items-center text-left text-2xl font-semibold accordion-toggle">
+          About the frame
+          <span class="text-3xl transition-transform">+</span>
+        </button>
+        <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out text-gray-700 mt-4 text-xl">
+          Clean lines, sharp angles, and effortless charm — that’s the statement our rectangle frames make. Designed for those who lead with quiet confidence, these glasses bring structure to softer features and edge to any look. Whether you’re deep in thought or stealing the spotlight, this frame speaks sophistication with a modern twist.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- Top Border -->
+   <div class="bg-white text-black font-sans text-lg mt-10">
+  <div class="border-t border-black"></div>
+
+  <!-- Offer Section -->
+  <section class="text-center py-16 px-4">
+    <h2 class="text-4xl font-bold mb-4">Get 30% off on your first order</h2>
+    <p class="text-2xl mb-8">Sign up now for exclusive news and offers!</p>
+
+    <!-- Input and Sign-up Button -->
+    <div class="flex justify-center max-w-xl mx-auto mb-5">
+      <input type="email" placeholder="Enter your email"
+        class="w-2/3 p-4 text-xl border border-black rounded-l-full outline-none" />
+      <button onclick="window.location.href='/FYP-2024/website/loginpages/SignupPage.html'"
+        class="w-1/3 p-4 text-xl bg-black text-white rounded-r-full hover:opacity-90">
+        Sign up
+      </button>
+    </div>
+
+    <!-- Terms -->
+    <p class="text-base max-w-2xl mx-auto mt-2">
+      Discount applies to all items. Optic Suite reserves the right to modify or cancel at any time.
+    </p>
+  </section>
+
+<!-- Social Section -->
+<section class="flex flex-col items-center justify-center gap-4 pb-12">
+  <!-- Logo and Title in One Line -->
+  <div class="flex items-center justify-center space-x-6 text-3xl">
+    <!-- Replace these gray circles with your actual logo -->
+    <div class="flex items-center space-x-2">
+      <div class="w-10 h-10 bg-gray-300 rounded-full"></div>
+      <div class="w-10 h-10 bg-gray-300 rounded-full"></div>
+    </div>
+    <span class="text-2xl font-semibold">Optic Suite</span>
+    <div class="text-4xl font-bold">Socialize with us</div>
+  </div>
+
+  <!-- Social Media Icons -->
+  <div class="flex space-x-6 text-3xl mt-4 text-black justify-center">
+    <a href="#" class="hover:text-gray-600"><i class="fab fa-facebook"></i></a>
+    <a href="#" class="hover:text-gray-600"><i class="fab fa-pinterest"></i></a>
+    <a href="#" class="hover:text-gray-600"><i class="fab fa-x-twitter"></i></a>
+    <a href="#" class="hover:text-gray-600"><i class="fab fa-instagram"></i></a>
+    <a href="#" class="hover:text-gray-600"><i class="fab fa-youtube"></i></a>
+  </div>
+</section>
+<!-- FAQ and Customer Service Section -->
+<section class="bg-white border-t border-black py-10 px-6 md:px-16">
+  <div class="flex flex-col md:flex-row justify-center gap-10 md:gap-20 text-xl">
+
+    <!-- Left Column: FAQs -->
+    <div class="flex-1 md:max-w-[45%]">
+
+      <h2 class="font-bold text-3xl mb-6">Frequently Asked Questions FAQs</h2>
+      <div class="grid grid-cols-2 gap-y-4 gap-x-8 text-gray-900 font-medium text-xl">
+        <span>Virtual Try-on</span>
+        <span>3D View</span>
+        <span>Glasses</span>
+        <span>Warranty</span>
+        <span>Sunglasses</span>
+        <span>Shipping</span>
+        <span>Styles</span>
+        <span>Refund Policy</span>
+        <span>Prescription</span>
+      </div>
+    </div>
+
+    <!-- Right Column: Customer Service -->
+    <div class="flex-1 md:max-w-[50%] pl-52">
+      <h2 class="font-bold text-3xl mb-6">Customer Service</h2>
+      <ul class="space-y-6 text-gray-900 font-medium text-xl">
+        <li class="flex items-center gap-4">
+          <img src="/FYP-2024/FYP/OpticSuiteImages/women collection/Icons/tractor icon.png" alt="Track Order Icon" class="w-8 h-8" />
+          <span>Track my order</span>
+        </li>
+        <li class="flex items-center gap-4">
+          <img src="/FYP-2024/FYP/OpticSuiteImages/women collection/Icons/transfer icon.png" alt="Return Icon" class="w-8 h-8" />
+          <span>Return Information</span>
+        </li>
+        <li class="flex items-center gap-4">
+          <img src="/FYP-2024/FYP/OpticSuiteImages/women collection/Icons/gift-card icon.png" alt="Gift Card Icon" class="w-8 h-8" />
+          <span>Optic Suite Gift Card</span>
+        </li>
+        <li class="flex items-center gap-4">
+          <img src="/FYP-2024/FYP/OpticSuiteImages/women collection/Icons/warranty icon.png" alt="Warranty Icon" class="w-8 h-8" />
+          <span>Optic Suite Warranty</span>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- Bottom Border -->
+<div class="border-t-[2px] border-black w-full mt-10"></div>
+
+   </div>
+   <!--footer-->
+
+<footer class="bg-black text-white px-16 py-10">
+   <!-- White Line -->
+  
+  <!-- Top Row: Logo and Description -->
+  <div class="flex flex-col md:flex-row justify-between items-center md:items-start pb-6">
+    <div class="flex items-center space-x-1">
+      <div class="w-4 h-4 bg-white rounded-full"></div>
+      <div class="w-4 h-4 bg-white rounded-full"></div>
+      <h2 class="text-xl font-bold ml-2">Optic Suite</h2>
+    </div>
+    <p class="mt-4 md:mt-0 max-w-xl items-end  text-white text-xl">
+      We empower users to explore eyewear that truly fits—not just their face, but their lifestyle and values. 
+      Experience technology, comfort, and style—all in one visionary platform.
+    </p>
+  </div>
+
+  <!-- White Line -->
+  <hr class="border-white mb-8 w-full" />
+
+  <!-- Bottom Grid -->
+  <div class="bg-black text-white px-6 md:px-20 pt-10 pb-6">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-8 text-sm">
+    <!-- Product -->
+    <div>
+      <h3 class="font-bold text-white text-xl mb-4">Product</h3>
+      <ul class="space-y-4 text-gray-400 text-lg">
+        <li>Features</li>
+        <li>Pricing</li>
+        <li>Case studies</li>
+        <li>Reviews</li>
+        <li>Updates</li>
+      </ul>
+    </div>
+
+    <!-- Company -->
+    <div>
+      <h3 class="font-bold text-white text-xl mb-4">Company</h3>
+      <ul class="space-y-4 text-gray-400 text-lg">
+        <li>About</li>
+        <li>Contact us</li>
+        <li>Careers</li>
+        <li>Culture</li>
+        <li>Blog</li>
+      </ul>
+    </div>
+
+    <!-- Support -->
+    <div>
+      <h3 class="font-bold text-white text-xl mb-4">Support</h3>
+      <ul class="space-y-4 text-gray-400 text-lg">
+        <li>Getting started</li>
+        <li>Help center</li>
+        <li>Server status</li>
+        <li>Report a bug</li>
+        <li>Chat support</li>
+      </ul>
+    </div>
+
+    <!-- Downloads -->
+    <div>
+      <h3 class="font-bold text-white mb-4 text-xl">Downloads</h3>
+      <ul class="space-y-4 text-gray-400 text-lg">
+        <li>iOS</li>
+        <li>Android</li>
+        <li>Mac</li>
+        <li>Windows</li>
+        <li>Chrome</li>
+      </ul>
+    </div>
+
+    <!-- Newsletter -->
+    <div>
+      <h3 class="font-bold mb-4 text-xl">Subscribe to our newsletter</h3>
+      <p class="text-gray-400 mb-4 text-lg">
+        Subscribe to our newsletter today and see the future of eyewear, delivered straight to your inbox.
+      </p>
+      <div class="space-y-3">
+        <input type="email" placeholder="Enter your email"
+          class="w-full rounded-full px-4 py-3 bg-white text-black placeholder-gray-500 focus:outline-none" />
+        <button
+          class="w-full bg-white text-black rounded-full px-4 py-2 hover:bg-gray-200 transition duration-200">Subscribe</button>
+      </div>
+    </div>
+  </div>
+</div>
+   <!-- White Line -->
+   <hr class="border-white mb-8 mt-6 w-full"  />
+    <!-- Footer bottom -->
+  <div class="mt-4 pt-4 flex flex-col md:flex-row justify-between items-center text-white text-lg">
+    <p>Copyright © 2022 Optic Suite | All Rights Reserved</p>
+    <div class="flex space-x-5 mt-4 text-white text-xl">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      <a href="#"><i class="fab fa-youtube"></i></a>
+    </div>
+    
+    
+  </div>
+  <!-- ✅ 3D Model Modal -->
+  <div id="model-modal"
+       class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl p-6 pt-12">
+      <button id="close-model-modal"
+              class="absolute top-4 right-4 text-3xl text-gray-700 hover:text-red-600">
+        &times;
+      </button>
+
+      <model-viewer id="popup-model-viewer"
+                    src=""
+                    alt="3D Model"
+                    auto-rotate
+                    camera-controls
+                    ar
+                    style="width: 100%; height: 500px; background: #fff; border-radius: 1rem;">
+      </model-viewer>
+    </div>
+  </div>
+
+</footer>
+
+
+ <div id="fab-container"></div>
+<script>
+  fetch('/FYP-2024/website/Shop/floating-button.html')
+    .then(res => res.text())
+    .then(data => document.getElementById('fab-container').innerHTML = data);
+    // Accordion
+    document.querySelectorAll(".accordion-toggle").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const content = btn.nextElementSibling;
+        const icon = btn.querySelector("span");
+
+        if (content.style.maxHeight) {
+          content.style.maxHeight = null;
+          icon.textContent = "+";
+        } else {
+          document.querySelectorAll(".accordion-content").forEach((el) => {
+            el.style.maxHeight = null;
+            el.previousElementSibling.querySelector("span").textContent = "+";
+          });
+          content.style.maxHeight = content.scrollHeight + "px";
+          icon.textContent = "−";
+        }
+      });
+    });
+
+    // Size select toggle
+    document.querySelectorAll(".size-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("bg-black", "text-white"));
+        btn.classList.add("bg-black", "text-white");
+      });
+    });
+
+    function goToPrescription() {
+      const name = document.getElementById("product-name").textContent;
+      const brand = document.getElementById("product-brand").textContent;
+      const image = document.getElementById("main-image").src;
+      const price = document.getElementById("product-price").textContent.replace(/[^\d]/g, "");
+      const colorText = document.getElementById("color-name").textContent.split(" ")[0];
+
+      let selectedSize = "-";
+      document.querySelectorAll(".size-btn").forEach((btn) => {
+        if (btn.classList.contains("bg-black")) {
+          selectedSize = btn.textContent.trim();
+        }
+      });
+
+      localStorage.setItem("productName", name);
+      localStorage.setItem("productBrand", brand);
+      localStorage.setItem("productImage", image);
+      localStorage.setItem("productPrice", price);
+      localStorage.setItem("productColor", colorText);
+      localStorage.setItem("productSize", selectedSize);
+
+      window.location.href = "prescription-selection.html";
+    }
+
+    function goToCheckoutWithoutLens() {
+      const name = document.getElementById("product-name").textContent;
+      const brand = document.getElementById("product-brand").textContent;
+      const image = document.getElementById("main-image").src;
+      const price = document.getElementById("product-price").textContent.replace(/[^\d]/g, "");
+      const colorText = document.getElementById("color-name").textContent.split(" ")[0];
+
+      let selectedSize = "-";
+      document.querySelectorAll(".size-btn").forEach((btn) => {
+        if (btn.classList.contains("bg-black")) {
+          selectedSize = btn.textContent.trim();
+        }
+      });
+
+      localStorage.setItem("productName", name);
+      localStorage.setItem("productBrand", brand);
+      localStorage.setItem("productImage", image);
+      localStorage.setItem("productPrice", price);
+      localStorage.setItem("color", colorText);
+      localStorage.setItem("size", selectedSize);
+
+      localStorage.removeItem("orderId");
+      window.location.href = "checkout.html";
+    }
+  </script>
+</body>
+</html>

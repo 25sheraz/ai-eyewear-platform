@@ -1,0 +1,49 @@
+
+            /* Text Reveal Animation */
+            .text-reveal-container {
+                display: inline-block;
+                overflow: hidden; /* Ensures only the revealed portion of the text is visible */
+                position: relative;
+                height: 150px; /* Automatically adjust to fit text */
+            }
+        
+            .text-reveal {
+                transform: translateY(100%); /* Start below the container */
+                animation: revealUp 1s ease-out forwards;
+            }
+        
+            @keyframes revealUp {
+                0% {
+                    transform: translateY(100%);
+                    opacity: 0; /* Text is invisible initially */
+                }
+                100% {
+                    transform: translateY(0);
+                    opacity: 1; /* Fully visible at the end */
+                }
+            }
+    
+            /* Image Reveal Animation */
+            .image-reveal-container {
+                display: inline-block;
+                overflow: hidden;
+                position: relative;
+                height: 100vh; /* Set height based on your image aspect ratio */
+            }
+    
+            .image-reveal {
+                transform: translateY(100%);
+                animation: revealImage 1s ease-out forwards;
+            }
+    
+            @keyframes revealImage {
+                0% {
+                    transform: translateY(100%);
+                    opacity: 0;
+                }
+                100% {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+    

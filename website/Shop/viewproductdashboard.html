@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Products</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 p-6">
+
+  <!-- Header -->
+  <div class="max-w-7xl mx-auto flex justify-between items-center mb-10">
+    <h1 class="text-2xl font-bold">All Products</h1>
+    <a href="/FYP-2024/website/Shop/admindashboard.html" 
+       class="bg-black text-white px-6 py-2 rounded-lg shadow hover:bg-gray-800 transition">
+       Back to Dashboard
+    </a>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="max-w-7xl mx-auto flex justify-end mb-6">
+    <select id="categoryFilter" class="p-2 border rounded-lg focus:ring-2 focus:ring-black">
+      <option value="all">All Categories</option>
+      <option value="men">Men</option>
+      <option value="women">Women</option>
+      <option value="kids">Kids</option>
+    </select>
+  </div>
+
+  <!-- Products Grid -->
+  <div id="productGrid" class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <!-- JS se products load honge -->
+  </div>
+
+  <!-- Firebase Script -->
+  <script type="module">
+    // ✅ Import Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+    import { getFirestore, collection, query, orderBy, getDocs } 
+      from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
+    // ✅ Firebase Config
+    const firebaseConfig = {
+     apiKey: "YOUR_FIREBASE_API_KEY",
+  authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+  databaseURL: "YOUR_FIREBASE_DATABASE_U_R_L",
+  projectId: "YOUR_FIREBASE_PROJECT_ID",
+  storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+  appId: "YOUR_FIREBASE_APP_ID",
+  measurementId: "YOUR_FIREBASE_MEASUREMENT_ID"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // ✅ Load Products
+    async function loadProducts(category = "all") {
+      const productGrid = document.getElementById("productGrid");
+      productGrid.innerHTML = "<p class='col-span-full text-gray-500'>Loading products...</p>";
+
+      const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+      const snapshot = await getDocs(q);
+
+      productGrid.innerHTML = "";
+
+      snapshot.forEach(docSnap => {
+        const product = docSnap.data();
+        const productId = docSnap.id;
+
+        // Category filter
+        if (category !== "all" && product.category !== category) return;
+
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition p-4";
+
+      // ✅ Card inner content
+card.innerHTML = `
+  <!-- Image Section -->
+  <div class="w-full h-48 flex items-center justify-center bg-gray-100">
+    <img src="${product.imageUrl}" class="max-h-full max-w-full object-contain" />
+  </div>
+
+  <!-- Product Details -->
+  <div class="flex-1 p-4 flex flex-col justify-between">
+    <div class="text-center space-y-1">
+      <p class="font-semibold text-lg">${product.brand} - ${product.name}</p>
+      <p class="text-sm text-gray-500">Category: ${product.category}</p>
+      <p class="text-sm font-medium text-gray-700">Price: Rs. ${product.price}</p>
+      <p class="text-sm ${product.modelUrl ? 'text-green-600' : 'text-red-500'} font-medium">
+        ${product.modelUrl ? '3D Available' : 'No 3D'}
+      </p>
+    </div>
+
+    <!-- Button -->
+    <div class="mt-4">
+      <a href="product-view.html?id=${productId}" 
+         class="block bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition text-center">
+        View
+      </a>
+    </div>
+  </div>
+`;
+        productGrid.appendChild(card);
+      });
+
+      if (!productGrid.hasChildNodes()) {
+        productGrid.innerHTML = "<p class='col-span-full text-gray-500'>No products found.</p>";
+      }
+    }
+
+    // ✅ Category filter listener
+    document.getElementById("categoryFilter").addEventListener("change", (e) => {
+      loadProducts(e.target.value);
+    });
+
+    // ✅ Init load
+    loadProducts();
+  </script>
+
+</body>
+</html>

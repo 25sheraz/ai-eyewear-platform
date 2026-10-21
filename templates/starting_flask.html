@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Glasses Recommendation</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f2f2f2; }
+        h1 { color: #333; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+        video, canvas, img { max-width: 100%; margin-top: 10px; }
+        .preview-img { max-height: 200px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<button id="recommendBtn">Recommend Glasses</button>
+<p id="result"></p>
+</body>
+</html>
+<script>
+  document.getElementById("recommendBtn").addEventListener("click", async () => {
+    const response = await fetch("http://127.0.0.1:5000", {
+      method: "POST"
+    });
+    const data = await response.json();
+    document.getElementById("result").innerText = "Prediction: " + data.result;
+  });
+</script>

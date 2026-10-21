@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optic Suite</title>
+    <link rel="stylesheet" href="output.css">
+<link rel="stylesheet" href="animation.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        .carousel {
+            display: flex;
+            scroll-snap-type: x mandatory;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 20px; /* Gap between sections */
+            -webkit-overflow-scrolling: touch;
+        }
+        .carousel::-webkit-scrollbar {
+            display: none; /* Hide scrollbar */
+        }
+        .carousel-item {
+            scroll-snap-align: center;
+            flex: 0 0 auto;
+        }
+         /* Smooth scrolling effect */
+    .scroll-container {
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+    }
+
+
+    .scroll-container::-webkit-scrollbar-thumb:hover {
+      background-color: transparent;
+    }
+    .scroll-container {
+  -ms-overflow-style: none; /* Hides scrollbar in IE */
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+.scroll-container::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in Chrome/Safari */
+}
+
+        /* Carousel Styles of brands logos */
+
+
+   /* Auto-scroll animation for optic carousel for the carousal of opticsuit collection */
+   @keyframes opticScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .optic-carousel-track {
+      animation: opticScroll 20s linear infinite;
+    }
+    @keyframes optic-scroll {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(0); }
+  25% { transform: translateX(-420px); }
+
+  45% { transform: translateX(-420px); }
+  50% { transform: translateX(-840px); }
+
+  70% { transform: translateX(-840px); }
+  75% { transform: translateX(-1260px); }
+
+  95% { transform: translateX(-1260px); }
+  100% { transform: translateX(-1680px); }
+}
+
+.animate-optic-scroll {
+  animation: optic-scroll 10s linear infinite;
+}
+/*fan fav slider*/
+
+  @keyframes scrollSlider {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .animate-scroll {
+    animation: scrollSlider 20s linear infinite;
+  }
+
+  /* Duplicate track to loop smoothly */
+  .slider-track {
+    display: flex;
+    width: max-content;
+  }
+
+
+/*popup*/
+@keyframes slide-infinite {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .animate-slide-infinite {
+    animation: slide-infinite 20s linear infinite;
+  } </style>
+    </head>
+
+<body class="bg-white">
+
+     <!-- Navbar Load Karne ka Container -->
+  <div id="navbar"></div>
+
+
+<!--landing page start-->
+
+
+<div class="relative mt-10 mx-auto bg-black" style="width: 90vw; height: 70vh; border-radius: 30px 30px 0 0; overflow: hidden;">
+    <!-- Carousel Container -->
+    <div id="carousel" class="carousel flex space-x-8 w-full h-full">
+        <!-- Section 1 -->
+        <section class="carousel-item flex-shrink-0 relative flex justify-between items-center bg-black text-white mx-auto" style="height: 100%; width: 90vw;">
+            <button class="absolute left-4 top-1/2 transform -translate-y-1/2 border-2 border-white rounded-full w-16 h-16 flex justify-center items-center text-3xl z-10 bg-black">&lt;</button>
+            <div class="flex flex-col justify-center items-start w-1/2 pl-32">
+                <h1 class="text-5xl font-bold mb-4">Find your perfect fit!</h1>
+                <p class="text-2xl">Try on glasses in real-time with our 3D <br>model feature and discover the<br> perfect style for you!</p>
+            </div>
+            <div class="flex justify-center items-end w-1/2 mb-14" style="height: 80vh;">
+                <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Carousel\1st.png" alt="Woman wearing sunglasses" class="h-auto max-h-full object-contain">
+            </div>
+            <button class="absolute right-4 top-1/2 transform -translate-y-1/2 border-2 border-white rounded-full w-16 h-16 flex justify-center items-center text-3xl z-10 bg-black">&gt;</button>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="carousel-item flex-shrink-0 relative flex justify-between items-center bg-black text-white mx-auto" style="height: 100%; width: 90vw;">
+            <button class="absolute left-4 top-1/2 transform -translate-y-1/2 border-2 border-white rounded-full w-16 h-16 flex justify-center items-center text-3xl z-10 bg-black">&lt;</button>
+            <div class="flex flex-col justify-center items-start w-1/2 pl-32">
+                <h1 class="text-5xl font-bold mb-4">Experience Optic Suite!</h1>
+                <p class="text-2xl">Try our eyewear collection virtually <br>and find out perfect pair-effortless,<br> stylish, and made just for you!</p>
+            </div>
+            <div class="flex justify-center items-end w-1/2 mb-1" style="height: 70vh;">
+                <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Carousel\2nd.png" alt="Woman wearing sunglasses" class="h-auto max-h-full object-contain">
+            </div>
+            <button class="absolute right-4 top-1/2 transform -translate-y-1/2 border-2 border-white rounded-full w-16 h-16 flex justify-center items-center text-3xl z-10 bg-black">&gt;</button>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="carousel-item flex-shrink-0 relative flex justify-between items-center bg-black text-white mx-auto" style="height: 100%; width: 90vw;">
+            <button class="absolute left-4 top-1/2 transform -translate-y-1/2 border-2 border-white rounded-full w-16 h-16 flex justify-center items-center text-3xl z-10 bg-black">&lt;</button>
+            <div class="flex flex-col justify-center items-start w-1/2 pl-32">
+                <h1 class="text-5xl font-bold mb-4">Hijab, Make-up or Veil?</h1>
+                <p class="text-2xl">Explore eyewear solutions designed <br>for every look and lifestyle with ease.</p>
+            </div>
+            <div class="flex justify-center items-end w-1/2" style="height: 70vh;">
+                <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Carousel\3rd.png" alt="Woman wearing sunglasses" class="h-auto max-h-full object-contain">
+            </div>
+            <button class="absolute right-4 top-1/2 transform -translate-y-1/2 border-2 border-white rounded-full w-16 h-16 flex justify-center items-center text-3xl z-10 bg-black">&gt;</button>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="carousel-item flex-shrink-0 relative flex justify-between items-center bg-black text-white mx-auto" style="height: 100%; width: 90vw;">
+            <button class="absolute left-4 top-1/2 transform -translate-y-1/2 border-2 border-white rounded-full w-16 h-16 flex justify-center items-center text-3xl z-10 bg-black">&lt;</button>
+            <div class="flex flex-col justify-center items-start w-1/2 pl-32">
+                <h1 class="text-5xl font-bold mb-4">See Before You Buy!</h1>
+                <p class="text-2xl">Capture your face, try different <br>frames, and find the best match<br>instantly</p>
+            </div>
+            <div class="flex justify-center items-end w-1/2 mb-1" style="height: 70vh;">
+                <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Carousel\4th.png" alt="Woman wearing sunglasses" class="h-auto max-h-full object-contain">
+            </div>
+            <button class="absolute right-4 top-1/2 transform -translate-y-1/2 border-2 border-white rounded-full w-16 h-16 flex justify-center items-center text-3xl z-10 bg-black">&gt;</button>
+        </section>
+    </div>
+</div>
+<!-- Heading and Button Section -->
+<p class="text-gray-700 text-xl mt-2 p-4 ml-8">Pakistan's Leading Online Optician
+</p>
+
+<div class="flex items-center justify-between px-10 ml-2 ">
+    <!-- Text on the left -->
+    <h1 class="text-3xl font-bold">Find your new favorite glasses</h1>
+    
+    <!-- Button on the right -->
+    <a href="#" class="bg-gray-200 text-black border-2 border-black rounded-3xl px-6 py-2">
+        Discover all glasses
+    </a>
+</div>
+
+
+<!-- Women/Men/Kids Section -->
+<div class="mt-10 w-full px-10 grid grid-cols-1 sm:grid-cols-3 gap-8">
+    <!-- Women Section -->
+    <div class="relative bg-white rounded-3xl overflow-hidden shadow-md border-black border-2 transition-transform duration-300 hover:scale-105" style="height:90vh">
+        <!-- Image -->
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Find your new favorite glasses\woman.jpg" alt="Woman wearing glasses" class="object-cover w-full h-full">
+        
+        <!-- Gray Filter -->
+        <div class="absolute inset-0 bg-gray-500 bg-opacity-50 transition-opacity duration-300 hover:bg-opacity-0"></div>
+        
+        <!-- Content -->
+        <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent text-white">
+            <h2 class="text-3xl font-bold mb-2">WOMEN</h2>
+            <ul class="text-lg space-y-1">
+                <li><a href="/FYP-2024/website/Shop/productswomen.html" class="flex items-center">Glasses <span class="ml-2">&rarr;</span></a></li>
+
+            </ul>
+        </div>
+    </div>
+
+    <!-- Kids Section -->
+    <div class="relative bg-white rounded-3xl overflow-hidden shadow-md w-96 border-black border-2 mt-16 transition-transform duration-300 hover:scale-105" style="height:70vh">
+        <!-- Image -->
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Find your new favorite glasses\kid.jpg" alt="Kid wearing glasses" class="object-cover w-full h-full">
+        
+        <!-- Gray Filter -->
+        <div class="absolute inset-0 bg-gray-500 bg-opacity-50 transition-opacity duration-300 hover:bg-opacity-0"></div>
+        
+        <!-- Content -->
+        <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent text-white">
+            <h2 class="text-3xl font-bold mb-2">KIDS</h2>
+            <ul class="text-lg space-y-1">
+                <li><a href="/FYP-2024/website/Shop/productkid.html" class="flex items-center">Glasses <span class="ml-2">&rarr;</span></a></li>
+              
+            </ul>
+        </div>
+    </div>
+
+    <!-- Men Section -->
+    <div class="relative bg-white rounded-3xl overflow-hidden shadow-md border-black border-2 transition-transform duration-300 hover:scale-105" style="height:90vh">
+        <!-- Image -->
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Find your new favorite glasses\man.jpg" alt="Man wearing glasses" class="object-cover w-full h-full">
+        
+        <!-- Gray Filter -->
+        <div class="absolute inset-0 bg-gray-500 bg-opacity-50 transition-opacity duration-300 hover:bg-opacity-0"></div>
+        
+        <!-- Content -->
+        <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent text-white">
+            <h2 class="text-3xl font-bold mb-2">MEN</h2>
+            <ul class="text-lg space-y-1">
+                <li><a href="/FYP-2024/website/Shop/productman.html" class="flex items-center">Glasses <span class="ml-2">&rarr;</span></a></li>
+              
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Heading and Button Section -->
+
+<p class="text-gray-700 text-xl mt-2 p-4 ml-8">Sunglasses Trends
+</p>
+
+<div class="flex items-center justify-between px-10 ml-2 ">
+    <!-- Text on the left -->
+    <h1 class="text-3xl font-bold">Best Sellers</h1>
+    
+    <!-- Button on the right -->
+    <a href="\FYP-2024\website\Shop.html\productlisting.html" class="bg-gray-200 text-black border-2 border-black rounded-3xl px-6 py-2">
+        View All
+    </a>
+</div>
+<!--product Catogery slider-->
+<div class="overflow-x-auto scroll-container flex gap-6 px-6 mt-8  bg-white">
+    <!-- Browline -->
+    <div class="flex-shrink-0 w-[350px] h-[450px] flex flex-col pl-12 items-center text-center snap-start ">
+      <!-- Image -->
+      <div class="w-full h-[80%] overflow-hidden rounded-3xl shadow-lg border-2 border-black">
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Best Sellers\browline.jpeg" alt="Browline Glasses" class="object-cover w-full h-full" />
+      </div>
+      <!-- Text -->
+      <h2 class="text-4xl font-semibold mt-4">Browline</h2>
+      <a href="#" class="text-xl text-black mt-2 flex items-center hover:text-black">
+        Shop now
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2" />
+      </a>
+    </div>
+
+    <!-- Aviator Revival -->
+    <div class="flex-shrink-0 w-[350px] h-[450px] flex flex-col items-center text-center snap-start">
+      <div class="w-full h-[80%] overflow-hidden rounded-3xl shadow-lg border-2 border-black">
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Best Sellers\aviator style.jpeg" alt="Aviator Glasses" class="object-cover w-full h-full" />
+      </div>
+      <h2 class="text-4xl font-semibold mt-4">Aviator Revival</h2>
+      <a href="#" class="text-xl text-black mt-2 flex items-center hover:text-black">
+        Shop now
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2" />
+      </a>
+    </div>
+
+    <!-- Cat-Eye -->
+    <div class="flex-shrink-0 w-[350px] h-[450px] flex flex-col items-center text-center snap-start">
+      <div class="w-full h-[80%] overflow-hidden rounded-3xl shadow-lg border-2 border-black">
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Best Sellers\cat-eye.jpeg" alt="Cat-Eye Glasses" class="object-cover w-full h-full" />
+      </div>
+      <h2 class="text-4xl font-semibold mt-4">Cat-Eye</h2>
+      <a href="#" class="text-xl text-black mt-2 flex items-center hover:text-black">
+        Shop now
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2" />
+      </a>
+    </div>
+
+    <!-- Colorful Circular -->
+    <div class="flex-shrink-0 w-[350px] h-[450px] flex flex-col items-center text-center snap-start">
+      <div class="w-full h-[80%] overflow-hidden rounded-3xl shadow-lg border-2 border-black">
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Best Sellers\colorful confidence.jpeg" alt="Colorful Circular Glasses" class="object-cover w-full h-full" />
+      </div>
+      <h2 class="text-4xl font-semibold mt-4">Colorful Circular</h2>
+      <a href="#" class="text-xl text-black mt-2 flex items-center hover:text-black">
+        Shop now
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2" />
+      </a>
+    </div>
+
+    <!-- Polaroid -->
+    <div class="flex-shrink-0 w-[350px] h-[450px] flex flex-col items-center text-center snap-start">
+      <div class="w-full h-[80%] overflow-hidden rounded-3xl shadow-lg border-2 border-black">
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Best Sellers\polarized sunglasses.jpeg" alt="Polaroid Glasses" class="object-cover w-full h-full" />
+      </div>
+      <h2 class="text-4xl font-semibold mt-4">Polaroid</h2>
+      <a href="#" class="text-xl text-black mt-2 flex items-center hover:text-black">
+        Shop now
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2" />
+      </a>
+    </div>
+
+    <!-- Round -->
+    <div class="flex-shrink-0 w-[350px] h-[450px] flex flex-col items-center text-center snap-start">
+      <div class="w-full h-[80%] overflow-hidden rounded-3xl shadow-lg border-2 border-black">
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Best Sellers\round glasses.jpeg" alt="Round Glasses" class="object-cover w-full h-full" />
+      </div>
+      <h2 class="text-4xl font-semibold mt-4">Round</h2>
+      <a href="#" class="text-xl text-black mt-2 flex items-center hover:text-black">
+        Shop now
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2" />
+      </a>
+    </div>
+
+    <!-- Speed Shades -->
+    <div class="flex-shrink-0 w-[350px] h-[450px] flex flex-col items-center text-center snap-start">
+      <div class="w-full h-[80%] overflow-hidden rounded-3xl shadow-lg border-2 border-black">
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Best Sellers\speed shades.jpeg" alt="Speed Shades" class="object-cover w-full h-full" />
+      </div>
+      <h2 class="text-4xl font-semibold mt-4">Speed Shades</h2>
+      <a href="#" class="text-xl text-black mt-2 flex items-center hover:text-black">
+        Shop now
+        <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2" />
+      </a>
+    </div>
+  </div>
+
+
+  <p class="text-gray-700 text-xl mt-2 p-4 ml-8">Easy From Home
+</p>
+
+<div class="flex items-center justify-between px-10 ml-2 ">
+  
+    <h1 class="text-3xl font-bold">Discover Advantages</h1>
+    
+</div>
+
+<!--Advantages-->
+<div class="flex flex-col md:flex-row bg-[#3c4c59] min-h-screen mt-4">
+    <!-- Left Section with Features -->
+    <div class="w-full md:w-1/2 flex flex-col justify-center px-8 py-8">
+      <!-- First Row -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Quality Lenses -->
+        <div class="flex flex-col items-center text-center">
+          <div class="w-14 h-14 bg-white rounded-full flex justify-center items-center mb-4">
+            <img src="\FYP-2024\FYP\OpticSuiteImages\Crousal Images\quality-control_11724762.png" alt="Quality Lenses Icon" class="w-20 h-18">
+
+          </div>
+          <h2 class="text-3xl font-semibold text-white">Quality Lenses</h2>
+          <p class="text-white text-xl pt-2">Triple Coated</p>
+          <a href="#" class="text-black text-xl pt-2">Learn more →</a>
+        </div>
+  
+        <!-- Virtual Try-on -->
+        <div class="flex flex-col items-center text-center">
+          <div class="w-16 h-16 bg-black rounded-full flex justify-center items-center mb-4">
+            <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\camera_15990214.png" alt="Virtual Try-on Icon" class="w-8 h-8">
+          </div>
+          <h2 class="text-3xl font-semibold text-white">Virtual Try-on</h2>
+          <p class="text-white text-xl pt-2">Set up your favorites</p>
+          <a href="#" class="text-black text-xl pt-2">How it works →</a>
+        </div>
+      </div>
+  
+      <!-- Second Row -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+        <!-- Try at Home -->
+        <div class="flex flex-col items-center text-center">
+          <div class="w-16 h-16 bg-black rounded-full flex justify-center items-center mb-4">
+            <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\camera_15990214.png" alt="Try at Home Icon" class="w-8 h-8">
+          </div>
+          <h2 class="text-3xl font-semibold text-white">Try at Home</h2>
+          <p class="text-white text-xl pt-2">Find your best fit</p>
+          <a href="#" class="text-black text-xl pt-2">Learn more →</a>
+        </div>
+  
+        <!-- Trustworthy -->
+        <div class="flex flex-col items-center text-center">
+          <div class="w-16 h-16 bg-white rounded-full flex justify-center items-center mb-4">
+            <img src="\FYP-2024\FYP\OpticSuiteImages\Crousal Images\shield_5723866.png" alt="Trustworthy Icon" class="w-20 h-18">
+          </div>
+          <h2 class="text-3xl font-semibold text-white">Trustworthy</h2>
+          <p class="text-white text-xl pt-2">Satisfied Reviews</p>
+          <a href="#" class="text-black text-xl pt-2">Read more →</a>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Right Section with Full Background Image -->
+    <div class="w-full md:w-1/2 relative">
+      <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\easy at home-glasses.jpg" alt="Glasses" class="absolute inset-0 w-full h-full object-cover">
+    </div>
+  </div>
+  
+  
+  <p class="text-gray-700 text-xl mt-2 p-4 ml-8">Shop by Brands
+</p>
+
+<div class="flex items-center justify-between px-10 ml-2 ">
+  
+    <h1 class="text-3xl font-bold">Eyewear For Everyone</h1>
+    
+</div>
+ <!-- Glasses Section -->
+<div class="overflow-x-auto scroll-container flex gap-6 px-6 mt-8 bg-white ml-10">
+    <!-- Gucci -->
+    <div class="flex-shrink-0 w-[350px] h-[350px] flex flex-col items-center text-center snap-start rounded-3xl shadow-lg bg-white border-4 border-black overflow-hidden">
+        <!-- Image -->
+        <div class="w-full h-[65%] relative">
+          <div class="image-slider w-full h-full absolute inset-0 transition-opacity duration-1000">
+            <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Eyewear for everyone\gucci 1.jpg" alt="Gucci Glasses" class="object-cover w-full h-full" />
+          </div>
+          <div class="image-slider w-full h-full absolute inset-0 opacity-0 transition-opacity duration-1000">
+            <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Eyewear for everyone\gucci 2.webp" alt="Gucci Glasses Alt" class="object-cover w-full h-full" />
+          </div>
+        </div>
+        
+        <!-- Text and Button -->
+        <div class="w-full flex flex-col items-center p-4">
+          <h2 class="text-4xl font-semibold">Gucci</h2>
+          <a href="#" class="text-2xl text-black mt-3 flex items-center hover:text-gray-900">
+            Shop now
+            <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2 mt-1" />
+          </a>
+        </div>
+      </div>
+  
+   
+  
+    <!-- Prada -->
+    <div class="flex-shrink-0 w-[350px] h-[350px] flex flex-col items-center text-center snap-start rounded-3xl shadow-lg bg-white border-4 border-black overflow-hidden">
+        <div class="w-full h-[65%] relative">
+            <div class="image-slider w-full h-full absolute inset-0 transition-opacity duration-1000">
+              <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Eyewear for everyone\prada 1.webp" alt="Gucci Glasses" class="object-cover w-full h-full" />
+            </div>
+            <div class="image-slider w-full h-full absolute inset-0 opacity-0 transition-opacity duration-1000">
+              <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Eyewear for everyone\prada 2.webp" alt="Gucci Glasses Alt" class="object-cover w-full h-full" />
+            </div>
+          </div>
+      <div class="w-full flex flex-col items-center p-4">
+        <h2 class="text-4xl font-semibold">Prada</h2>
+        <a href="#" class="text-2xl text-black mt-3 flex items-center hover:text-gray-900">
+          Shop now
+          <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2 mt-1" />
+        </a>
+      </div>
+    </div>
+  
+    <!-- Rayban -->
+    <div class="flex-shrink-0 w-[350px] h-[350px] flex flex-col items-center text-center snap-start rounded-3xl shadow-lg bg-white border-4 border-black overflow-hidden">
+        <div class="w-full h-[65%] relative">
+            <div class="image-slider w-full h-full absolute inset-0 transition-opacity duration-1000">
+              <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Eyewear for everyone\rayban 1.jpeg" alt="Gucci Glasses" class="object-cover w-full h-full" />
+            </div>
+            <div class="image-slider w-full h-full absolute inset-0 opacity-0 transition-opacity duration-1000">
+              <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Eyewear for everyone\rayban 2.webp" alt="Gucci Glasses Alt" class="object-cover w-full h-full" />
+            </div>
+          </div>
+      <div class="w-full flex flex-col items-center p-4">
+        <h2 class="text-4xl font-semibold">Rayban</h2>
+        <a href="#" class="text-2xl text-black mt-3 flex items-center hover:text-gray-900">
+          Shop now
+          <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2 mt-1" />
+        </a>
+      </div>
+    </div>
+  
+    <!-- Saint Laurent -->
+    <div class="flex-shrink-0 w-[350px] h-[350px] flex flex-col items-center text-center snap-start rounded-3xl shadow-lg bg-white border-4 border-black overflow-hidden">
+        <div class="w-full h-[65%] relative">
+            <div class="image-slider w-full h-full absolute inset-0 transition-opacity duration-1000">
+              <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Eyewear for everyone\saint laurent 1.jpg" alt="Gucci Glasses" class="object-cover w-full h-full" />
+            </div>
+            <div class="image-slider w-full h-full absolute inset-0 opacity-0 transition-opacity duration-1000">
+              <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Eyewear for everyone\saint laurent 2.png" alt="Gucci Glasses Alt" class="object-cover w-full h-full" />
+            </div>
+          </div>
+      <div class="w-full flex flex-col items-center p-4">
+        <h2 class="text-4xl font-semibold">Saint Laurent</h2>
+        <a href="#" class="text-2xl text-black mt-3 flex items-center hover:text-gray-900">
+          Shop now
+          <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2 mt-1" />
+        </a>
+      </div>
+    </div>
+     <!-- Miu Miu -->
+     <div class="flex-shrink-0 w-[350px] h-[350px] flex flex-col items-center text-center snap-start rounded-3xl shadow-lg bg-white border-4 border-black overflow-hidden">
+        <div class="w-full h-[65%] relative">
+            <div class="image-slider w-full h-full absolute inset-0 transition-opacity duration-1000">
+              <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Eyewear for everyone\miu-miu-1.jpeg" alt="Gucci Glasses" class="object-cover w-full h-full" />
+            </div>
+            <div class="image-slider w-full h-full absolute inset-0 opacity-0 transition-opacity duration-1000">
+              <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Eyewear for everyone\miu-miu-2.jpeg" alt="Gucci Glasses Alt" class="object-cover w-full h-full" />
+            </div>
+          </div>
+      <div class="w-full flex flex-col items-center p-4">
+        <h2 class="text-4xl font-semibold">Miu-Miu</h2>
+        <a href="#" class="text-2xl text-black mt-3 flex items-center hover:text-gray-900">
+          Shop now
+          <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2 mt-1" />
+        </a>
+      </div>
+    </div>
+  
+    <!-- Tomford -->
+    <div class="flex-shrink-0 w-[350px] h-[350px] flex flex-col items-center text-center snap-start rounded-3xl shadow-lg bg-white border-4 border-black overflow-hidden">
+        <div class="w-full h-[65%] relative">
+            <div class="image-slider w-full h-full absolute inset-0 transition-opacity duration-1000">
+              <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Eyewear for everyone\tomford 1.jpeg" alt="Gucci Glasses" class="object-cover w-full h-full" />
+            </div>
+            <div class="image-slider w-full h-full absolute inset-0 opacity-0 transition-opacity duration-1000">
+              <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\Eyewear for everyone\tomford 2.jpeg" alt="Gucci Glasses Alt" class="object-cover w-full h-full" />
+            </div>
+          </div>
+      <div class="w-full flex flex-col items-center p-4">
+        <h2 class="text-4xl font-semibold">Tomford</h2>
+        <a href="#" class="text-2xl text-black mt-3 flex items-center hover:text-gray-900">
+          Shop now
+          <img src="\FYP-2024\FYP\OpticSuiteImages\Shop\shoparrow.png" alt="Arrow Icon" class="w-8 h-8 ml-2 mt-1" />
+        </a>
+      </div>
+    </div>
+  </div>
+  <!--brand logo slider-->
+  
+  <div class="overflow-hidden w-full object-cover py-24 relative">
+    <div id="slider-track" class="slider-track animate-scroll">
+      <!-- 1st Set -->
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/Burberry.png" class="w-50 h-40 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/DG-LOGO.jpg" class="w-50 h-40 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/Gucci.jpg" class="w-50 h-40 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/Moscot.jpg" class="w-60 h-40 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/Oakley_logo.svg" class="w-50 h-40 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/Parada.png" class="w-50 h-40 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/RayBan.png" class="w-60 h-40 px-4 flex-shrink-0 object-cover" />
+
+      
+      <!-- Duplicate Set -->
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/Burberry.png" class="w-50 h-40 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/DG-LOGO.jpg" class="w-50 h-40 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/Gucci.jpg" class="w-50 h-40 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/Moscot.jpg" class="w-60 h-40 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/Oakley_logo.svg" class="w-50 h-40 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/Parada.png" class="w-50 h-40 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Crousal Images/RayBan.png" class="w-60 h-40 px-4 flex-shrink-0 object-cover" />
+
+    </div>
+  </div>
+ 
+
+<!---container below the brands carousal-->
+<div class="bg-black text-white font-sans">
+<div class="  pl-8 pt-10 pb-16">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+    
+    <!-- Left Content -->
+    <div>
+      <h1 class="text-5xl font-bold mb-2">Optic Suite</h1>
+      <h2 class="text-4xl  text-white mb-4 ml-14 mt-5">Collection</h2>
+
+      <p class="text-gray-300 text-2xl mb-2 mt-12 ">New and Exclusive</p>
+      <h3 class="text-5xl md:text-3xl font-bold mb-4 mt-8">
+        Optic Suite Collection: Style For Everyone
+      </h3>
+      <p class="text-gray-300 text-2xl mb-6 mt-10">
+        The Mister Spex Collection offers affordable sunglasses for every occasion.
+        Perfect for your everyday wear – stylish, versatile, and high-quality.
+      </p>
+
+      <button class="bg-gray-200 text-black font-semibold px-5 py-2 mt-10 rounded-full hover:bg-white transition duration-300">
+        Discover all glasses
+      </button>
+    </div>
+
+    <!-- Right Image -->
+    <div class="flex items-start md:justify-end pt-1">
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Optic Suite Collection/Glasses with Hat.png" alt="Hat and Glasses" class="w-[900px] h-auto " />
+    </div>
+  </div></div>
+  <!--crousal in this section of opticsuite collection-->
+<!-- Carousel Section -->
+<div class="px-6 mt-4 pb-14 overflow-hidden">
+  <div class="relative w-full">
+    <!-- Carousel Track -->
+    <div class="optic-carousel-track flex w-max space-x-6 animate-optic-scroll">
+      <!-- CARD 1 -->
+      <div class="border-white border-2 rounded-2xl flex-shrink-0 w-[400px] h-[400px] bg-white text-white overflow-hidden relative">
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Optic Suite Collection/Huge Black 1.jpeg" class="w-full h-full object-cover" />
+        <div class="absolute bottom-0 left-0 w-full p-4">
+          <h3 class="text-2xl font-semibold text-black">Optic Suite Collection</h3>
+          <div class="flex justify-between text-black text-lg">
+            <span>Huge Black</span><span>PKR 2500</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="border-white border-2 rounded-2xl flex-shrink-0 w-[400px] h-[400px] bg-white text-white overflow-hidden relative">
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Optic Suite Collection/Men Mini Geo 1-2.jpeg" class="w-full h-full object-cover" />
+        <div class="absolute bottom-0 left-0 w-full p-4">
+          <h3 class="text-2xl font-semibold text-black">Optic Suite Collection</h3>
+          <div class="flex justify-between text-black text-lg">
+            <span>Men Mini Geo</span><span>PKR 3000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="border-white border-2 rounded-2xl flex-shrink-0 w-[400px] h-[400px] bg-white text-white overflow-hidden relative">
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Optic Suite Collection/Rect Corner 2.jpeg" class="w-full h-full object-cover" />
+        <div class="absolute bottom-0 left-0 w-full p-4">
+          <h3 class="text-2xl font-semibold text-black">Optic Suite Collection</h3>
+          <div class="flex justify-between text-black text-lg">
+            <span>Rect Corner</span><span>PKR 2500</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="border-white border-2 rounded-2xl flex-shrink-0 w-[400px] h-[400px] bg-white text-white overflow-hidden relative">
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Optic Suite Collection/Retro Black 1.jpeg" class="w-full h-full object-cover" />
+        <div class="absolute bottom-0 left-0 w-full p-4">
+          <h3 class="text-2xl font-semibold text-black">Optic Suite Collection</h3>
+          <div class="flex justify-between text-black text-lg">
+            <span>Retro Black</span><span>PKR 2500</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="border-white border-2 rounded-2xl flex-shrink-0 w-[400px] h-[400px] bg-white text-white overflow-hidden relative">
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Optic Suite Collection/Trio S31 1-2.jpeg" class="w-full h-full object-cover" />
+        <div class="absolute bottom-0 left-0 w-full p-4">
+          <h3 class="text-2xl font-semibold text-black">Optic Suite Collection</h3>
+          <div class="flex justify-between text-black text-lg">
+            <span>Trio</span><span>PKR 2000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<!--shop by frame shapes-->
+<div class="pt-10 px-16">
+  <p class="text-gray-700 text-2xl font-semibold mb-2">Bloom into new frames</p>
+  
+  <div class="flex justify-between items-center">
+    <h1 class="text-black text-4xl font-bold">Shop by frame shapes</h1>
+    
+    <button class="bg-gray-200 border border-black text-black font-semibold px-10 py-2 rounded-full hover:bg-white transition duration-300">
+      Shop All
+    </button>
+  </div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 px-10 py-10">
+  
+  <!-- Card 1 -->
+  <div class="group">
+    <div class="w-full h-52 overflow-hidden group-hover:border-2 border-black rounded-lg transition duration-300">
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Shop by Frame/Aviator.webp" alt="Frame 1" class="w-full h-full object-cover" />
+    </div>
+    <p class="mt-2 text-center text-2xl font-semibold text-black">Aviator</p>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="group">
+    <div class="w-full h-52 overflow-hidden group-hover:border-2 border-black rounded-lg transition duration-300">
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Shop by Frame/Cateye.png" alt="Frame 2" class="w-full h-full object-cover" />
+    </div>
+    <p class="mt-2 text-center text-2xl font-semibold text-black">Cat-Eye</p>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="group">
+    <div class="w-full h-52 overflow-hidden group-hover:border-2 border-black rounded-lg transition duration-300">
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Shop by Frame/Circle.webp" alt="Frame 3" class="w-full h-full object-cover" />
+    </div>
+    <p class="mt-2 text-center text-2xl font-semibold text-black">Circle</p>
+  </div>
+
+  <!-- Card 4 -->
+  <div class="group">
+    <div class="w-full h-52 overflow-hidden group-hover:border-2 border-black rounded-lg transition duration-300">
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Shop by Frame/Cateye.png" alt="Frame 4" class="w-full h-full object-cover" />
+    </div>
+    <p class="mt-2 text-center text-2xl font-semibold text-black">Cat-Eye</p>
+  </div>
+
+  <!-- Card 5 -->
+  <div class="group">
+    <div class="w-full h-52 overflow-hidden group-hover:border-2 border-black rounded-lg transition duration-300">
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Shop by Frame/Square.webp" alt="Frame 5" class="w-full h-full object-cover" />
+    </div>
+    <p class="mt-2 text-center text-2xl font-semibold text-black">Square</p>
+  </div>
+
+</div>
+<!--spring itno style-->
+<div class="pt-10 px-16">
+  <p class="text-gray-700 text-2xl font-semibold mb-2">Find frames that re-energize and renew</p>
+  
+  <div class="flex justify-between items-center">
+    <h1 class="text-black text-4xl font-bold">Spring into Style</h1>
+    
+    <button class="bg-gray-200 border border-black text-black font-semibold px-10 py-2 rounded-full hover:bg-white transition duration-300">
+      Shop All
+    </button>
+  </div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 px-10 py-10">
+  
+  <!-- Card 1 -->
+  <div class="group">
+    <div class="w-full h-52 overflow-hidden group-hover:border-2 border-black rounded-lg transition duration-300">
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Spring into Style/bluelight.webp" alt="Frame 1" class="w-full h-full object-cover" />
+    </div>
+    <p class="mt-2 text-center text-2xl font-semibold text-black">Bluelight</p>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="group">
+    <div class="w-full h-52 overflow-hidden group-hover:border-2 border-black rounded-lg transition duration-300">
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Spring into Style/eyeglasses.webp" alt="Frame 2" class="w-full h-full object-cover" />
+    </div>
+    <p class="mt-2 text-center text-2xl font-semibold text-black">Sunglasses</p>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="group">
+    <div class="w-full h-52 overflow-hidden group-hover:border-2 border-black rounded-lg transition duration-300">
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Spring into Style/sports.webp" alt="Frame 3" class="w-full h-full object-cover" />
+    </div>
+    <p class="mt-2 text-center text-2xl font-semibold text-black">Sports</p>
+  </div>
+
+  <!-- Card 4 -->
+  <div class="group">
+    <div class="w-full h-52 overflow-hidden group-hover:border-2 border-black rounded-lg transition duration-300">
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Spring into Style/bluelight.webp" alt="Frame 4" class="w-full h-full object-cover" />
+    </div>
+    <p class="mt-2 text-center text-2xl font-semibold text-black">Bluelight</p>
+  </div>
+
+  <!-- Card 5 -->
+  <div class="group">
+    <div class="w-full h-52 overflow-hidden group-hover:border-2 border-black rounded-lg transition duration-300">
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Spring into Style/eyeglasses.webp" alt="Frame 5" class="w-full h-full object-cover" />
+    </div>
+    <p class="mt-2 text-center text-2xl font-semibold text-black">Sunglasses</p>
+  </div>
+
+</div>
+<!-- Payment Options Section -->
+<section class="bg-gray-200 py-12">
+  <div class="max-w-7xl mx-auto px-6">
+    <!-- Heading -->
+    <div class="text-center mb-10">
+      <h2 class="text-4xl font-bold text-black">Payment Options Available</h2>
+      <p class="text-gray-500 text-2xl mt-2">Shop now and pay with our flexible payment options</p>
+    </div>
+
+    <!-- Payment Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- JazzCash Card -->
+      <div class="bg-white p-6 flex items-center gap-6 shadow-sm">
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Payments/jazzcash.png" alt="JazzCash" class="w-24 h-24 object-contain">
+        <div>
+          <h3 class="text-2xl font-semibold text-gray-950 mb-2">Enabling customers to make online and offline transactions easily.</h3>
+          <a href="#" class="text-gray-950 underline text-lg">Learn more</a>
+        </div>
+      </div>
+
+      <!-- Easypaisa Card -->
+      <div class="bg-white p-6 flex items-center gap-6 shadow-sm">
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Payments/easypaisa.png" alt="Easypaisa" class="w-24 h-24 object-contain">
+        <div>
+          <h3 class="text-2xl font-semibold text-gray-950 mb-2">No monthly or annual fee is charged for using the easypaisa.</h3>
+          <a href="#" class="text-gray-950 underline text-lg">Learn more</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!--fan favourite-->
+<!-- Fan Favourite Section -->
+<section class="bg-gray-600 py-12 overflow-hidden">
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold text-black mt-2">Fresh Fan Favourites</h1>
+    <h2 class="text-xl font-lg text-white mt-2">
+      Tag us on your social media with <span class="text-black font-semibold">#opticsuitefav</span>
+    </h2>
+  </div>
+
+  <!-- Slider Wrapper -->
+  <div class="overflow-hidden w-full  relative">
+    <div id="slider-track" class="slider-track animate-scroll">
+      <!-- 1st Set -->
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/1.webp" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/2.webp" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/3.jpeg" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/4.jpg" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/5.jpg" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/6.jpg" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/7.jpeg" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      
+      <!-- Duplicate Set -->
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/1.webp" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/2.webp" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/3.jpeg" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/4.jpg" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/5.jpg" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/6.jpg" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+      <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Shop-Page1/Fan Favs/7.jpeg" class="w-60 h-52 px-4 flex-shrink-0 object-cover" />
+    </div>
+  </div>
+</section>
+<!--footer-->
+
+<footer class="bg-black text-white px-16 py-10">
+   <!-- White Line -->
+  
+  <!-- Top Row: Logo and Description -->
+  <div class="flex flex-col md:flex-row justify-between items-center md:items-start pb-6">
+    <div class="flex items-center space-x-1">
+      <div class="w-4 h-4 bg-white rounded-full"></div>
+      <div class="w-4 h-4 bg-white rounded-full"></div>
+      <h2 class="text-xl font-bold ml-2">Optic Suite</h2>
+    </div>
+    <p class="mt-4 md:mt-0 max-w-xl items-end  text-white text-xl">
+      We empower users to explore eyewear that truly fits—not just their face, but their lifestyle and values. 
+      Experience technology, comfort, and style—all in one visionary platform.
+    </p>
+  </div>
+
+  <!-- White Line -->
+  <hr class="border-white mb-8 w-full" />
+
+  <!-- Bottom Grid -->
+  <div class="bg-black text-white px-6 md:px-20 pt-10 pb-6">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-8 text-sm">
+    <!-- Product -->
+    <div>
+      <h3 class="font-bold text-white text-xl mb-4">Product</h3>
+      <ul class="space-y-4 text-gray-400 text-lg">
+        <li>Features</li>
+        <li>Pricing</li>
+        <li>Case studies</li>
+        <li>Reviews</li>
+        <li>Updates</li>
+      </ul>
+    </div>
+
+    <!-- Company -->
+    <div>
+      <h3 class="font-bold text-white text-xl mb-4">Company</h3>
+      <ul class="space-y-4 text-gray-400 text-lg">
+        <li>About</li>
+        <li>Contact us</li>
+        <li>Careers</li>
+        <li>Culture</li>
+        <li>Blog</li>
+      </ul>
+    </div>
+
+    <!-- Support -->
+    <div>
+      <h3 class="font-bold text-white text-xl mb-4">Support</h3>
+      <ul class="space-y-4 text-gray-400 text-lg">
+        <li>Getting started</li>
+        <li>Help center</li>
+        <li>Server status</li>
+        <li>Report a bug</li>
+        <li>Chat support</li>
+      </ul>
+    </div>
+
+    <!-- Downloads -->
+    <div>
+      <h3 class="font-bold text-white mb-4 text-xl">Downloads</h3>
+      <ul class="space-y-4 text-gray-400 text-lg">
+        <li>iOS</li>
+        <li>Android</li>
+        <li>Mac</li>
+        <li>Windows</li>
+        <li>Chrome</li>
+      </ul>
+    </div>
+
+    <!-- Newsletter -->
+    <div>
+      <h3 class="font-bold mb-4 text-xl">Subscribe to our newsletter</h3>
+      <p class="text-gray-400 mb-4 text-lg">
+        Subscribe to our newsletter today and see the future of eyewear, delivered straight to your inbox.
+      </p>
+      <div class="space-y-3">
+        <input type="email" placeholder="Enter your email"
+          class="w-full rounded-full px-4 py-3 bg-white text-black placeholder-gray-500 focus:outline-none" />
+        <button
+          class="w-full bg-white text-black rounded-full px-4 py-2 hover:bg-gray-200 transition duration-200">Subscribe</button>
+      </div>
+    </div>
+  </div>
+</div>
+   <!-- White Line -->
+   <hr class="border-white mb-8 mt-6 w-full"  />
+    <!-- Footer bottom -->
+  <div class="mt-4 pt-4 flex flex-col md:flex-row justify-between items-center text-white text-lg">
+    <p>Copyright © 2022 Optic Suite | All Rights Reserved</p>
+    <div class="flex space-x-5 mt-4 text-white text-xl">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      <a href="#"><i class="fab fa-youtube"></i></a>
+    </div>
+    
+    
+  </div>
+</footer>
+
+
+<!-- Optic Suite Popup -->
+<div id="opticSuitePopup" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 hidden">
+  <!-- Popup Content (smaller size) -->
+  <div class="bg-black p-6 rounded-lg w-[80%] max-w-lg flex flex-col items-center">
+    <!-- Top Text -->
+    <h1 class="text-white text-3xl font-bold mb-6 text-center">Welcome to Optic Suite</h1>
+  
+    <!-- Centered Infinite Image Slider -->
+    <div class="w-full overflow-hidden mb-6">
+      <div class="flex space-x-6 animate-slide-infinite w-max">
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Slider/1.jpeg" class="h-32 rounded-xl object-cover" />
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Slider/2.jpeg" class="h-32 rounded-xl object-cover" />
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Slider/3.jpeg" class="h-32 rounded-xl object-cover" />
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Slider/4.jpeg" class="h-32 rounded-xl object-cover" />
+        <!-- Duplicate for loop effect -->
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Slider/1.jpeg" class="h-32 rounded-xl object-cover" />
+        <img src="/FYP-2024/FYP/OpticSuiteImages/Shop/Slider/2.jpeg" class="h-32 rounded-xl object-cover" />
+      </div>
+    </div>
+  
+
+    <!-- Call to Action -->
+    <p class="text-white text-lg mb-2">Not a member yet?</p>
+<p class="text-white text-xl mb-4 font-semibold text-center">
+  <span><a href="/FYP-2024/website/loginpages/SignupPage.html" class="text-lg font-bold text-white  underline">SignUp</a> for a seamless and personalized experience!</span>
+</p>
+
+
+    <!-- Close Button -->
+    <button onclick="closePopup()" class="absolute top-2 right-2 text-white text-3xl font-bold">&times;</button>
+  </div>
+</div>
+<!-- Button include -->
+<div id="fab-container"></div>
+<script>
+  fetch('/FYP-2024/website/Shop/floating-button.html')
+    .then(res => res.text())
+    .then(data => document.getElementById('fab-container').innerHTML = data);
+
+
+<!-- JavaScript for Sidebar -->
+
+    fetch("/FYP-2024/website/Shop/navbar.html")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("navbar").innerHTML = data;
+
+      // Yahan pe sidebar ka JS karwana hoga
+      const menuBtn = document.getElementById("menuBtn");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const closeBtn = document.getElementById("closeBtn");
+
+      if (menuBtn && sidebar && overlay && closeBtn) {
+        // Open sidebar
+        menuBtn.addEventListener("click", () => {
+          sidebar.classList.remove("-translate-x-full");
+          overlay.classList.remove("hidden");
+        });
+
+        // Close sidebar
+        closeBtn.addEventListener("click", () => {
+          sidebar.classList.add("-translate-x-full");
+          overlay.classList.add("hidden");
+        });
+
+        // Close on overlay click
+        overlay.addEventListener("click", () => {
+          sidebar.classList.add("-translate-x-full");
+          overlay.classList.add("hidden");
+        });
+      }
+    })
+    .catch(err => console.error("Navbar load error:", err));
+  
+
+    //Carousal
+    const carousel = document.getElementById('carousel');
+        const prevButtons = document.querySelectorAll('.absolute.left-4');
+        const nextButtons = document.querySelectorAll('.absolute.right-4');
+        const gap = 32; // Space between sections
+        const sectionWidth = carousel.offsetWidth;
+
+        let scrollAmount = 0;
+
+        nextButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                scrollAmount += sectionWidth + gap;
+                if (scrollAmount >= carousel.scrollWidth) scrollAmount = 0;
+                carousel.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+            });
+        });
+
+        prevButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                scrollAmount -= sectionWidth + gap;
+                if (scrollAmount < 0) scrollAmount = carousel.scrollWidth - sectionWidth;
+                carousel.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+            });
+        });
+        //animation for front carousel 
+        setInterval(() => {
+            scrollAmount += sectionWidth + gap;
+            if (scrollAmount >= carousel.scrollWidth) scrollAmount = 0;
+            carousel.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+        }, 2500); // Change every 5 seconds
+
+        //animation on brands product
+    
+  // Select all product containers
+  const containers = document.querySelectorAll(".flex-shrink-0");
+
+  // Loop through each container
+  containers.forEach((container) => {
+    // Get all image sliders inside the current container
+    const sliders = container.querySelectorAll(".image-slider");
+    let currentIndex = 0;
+
+    // Start animation for this container
+    setInterval(() => {
+      // Hide the current slider
+      sliders[currentIndex].classList.add("opacity-0");
+
+      // Update index to the next slider
+      currentIndex = (currentIndex + 1) % sliders.length;
+
+      // Show the next slider
+      sliders[currentIndex].classList.remove("opacity-0");
+    }, 2000); // Animation duration
+  });
+
+//popup
+function openPopup() {
+    document.getElementById('opticSuitePopup').classList.remove('hidden');
+  }
+  function closePopup() {
+    document.getElementById('opticSuitePopup').classList.add('hidden');
+  }
+
+</script>
+
+</body>
+</html>
