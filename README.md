@@ -1,14 +1,16 @@
-# Optic Suite: AI Eyewear Platform
+# Optivortium Alliance: AI Eyewear Platform
 
-My final-year project for a BS in Software Engineering at The University of Faisalabad (2026). It's an online eyewear store that detects your face shape from a photo or webcam, recommends frames that suit it, and lets you try glasses on live in the browser.
+My final-year project for a BS in Software Engineering at The University of Faisalabad (2026). **Optic Suite** is an online eyewear store that detects your face shape, recommends glasses that suit it, and lets you try frames on live through your webcam.
+
+**87% face shape accuracy on 700+ test images · over 95% face tracking accuracy in testing**
 
 ![Optic Suite landing page](docs/screenshot.jpg)
 
 ## What it does
 
-- **Face shape detection.** Upload a photo or use the webcam, and a CNN classifies the face as Heart, Oblong, Oval, Round or Square.
-- **Frame recommendations.** The API reads products for the chosen category (men, women or kids) from Firestore and returns the ones tagged as suiting that face shape.
-- **Virtual try-on.** MediaPipe Face Mesh tracks facial landmarks in real time in the browser and keeps the glasses on the face as the head moves. In functional testing it tracked faces with over 95% accuracy under normal indoor lighting.
+- **Real-time virtual try-on (AR).** Overlays eyeglass frames on a live webcam feed using MediaPipe's 478-point facial landmark model, iris points included. An affine transformation (rotation, scale and position) keeps the frames on the face across different head poses. It also measures pupil distance and estimates the frame width in millimetres.
+- **Face shape classifier.** Classifies a face as oval, round, square, heart or oblong with 87% accuracy on 700+ test images, served through a Flask REST API (`POST /api/predict`). It accepts an uploaded photo or a webcam capture.
+- **Personalised recommendations.** The API reads products for the chosen category (men, women or kids) from Firestore and returns the glasses tagged as suiting the detected face shape.
 - **Online shop.** Product pages for men, women and kids, lens and prescription choices, cart and checkout, Firebase sign-in (email, Google and Facebook), and an admin dashboard for adding products.
 
 ## How it works
@@ -23,8 +25,9 @@ flowchart LR
         E --> F["Recommended frames"]
     end
     subgraph tryon ["Virtual try-on"]
-        G["Webcam"] --> H["MediaPipe Face Mesh<br/>facial landmarks"]
-        H --> I["Glasses placed<br/>on the face"]
+        G["Webcam"] --> H["MediaPipe Face Mesh<br/>478 landmarks"]
+        H --> I["Affine transform<br/>rotate, scale, position"]
+        I --> J["Frames overlaid live<br/>+ pupil distance, frame width"]
     end
 ```
 
@@ -68,4 +71,4 @@ The trained model files, the product and marketing images, photos uploaded by us
 
 ## Tech stack
 
-Python · TensorFlow / Keras · MobileNetV2 · Flask · Firebase Authentication and Firestore · MediaPipe Face Mesh · JavaScript · HTML · Tailwind CSS
+Python · TensorFlow / Keras · scikit-learn · OpenCV · MediaPipe · Dlib · Flask · Firebase Authentication and Firestore · JavaScript · HTML · Tailwind CSS
